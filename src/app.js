@@ -79,16 +79,12 @@ app.use(passport.session());
 
 app.get('/', async (req, res) => {
   const events = await getEvents();
-  const user = req.user;
-  if (req.isAuthenticated()) {
-    return res.render('index', { user, events });
-  }
-  return res.render('index', { user, events });
+  res.json(events);
 });
 
-app.use('/', routerUser);
-app.use('/', routerEvent);
-app.use('/', routerStore);
+app.use(routerUser);
+app.use(routerEvent);
+app.use(routerStore);
 
 app.listen(port, () => {
   console.info(`Server running at http://localhost:${port}/`);

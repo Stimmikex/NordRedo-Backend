@@ -45,20 +45,9 @@ export let routerUser = express.Router();
   
   async function register(req, res, next) {
     const { username, password } = req.body;
-  
     const validationMessage = await validateUser(username, password);
-  
-    if (validationMessage) {
-      return res.send(`
-        <p>${validationMessage}</p>
-        <a href="/register">Reyna aftur</a>
-      `);
-    }
-  
+    console.info(validationMessage)
     await createUser(username, password);
-  
-    // næsta middleware mun sjá um að skrá notanda inn því hann verður til
-    // og `username` og `password` verða ennþá sett sem rétt í `req`
     return next();
   }
   

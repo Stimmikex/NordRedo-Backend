@@ -152,7 +152,7 @@ export async function deleteEvent(user, event) {
 }
 
 
-export async function updateEvent(title, text, seats, date, startDate, endDate, location, user_id, event_type_id, id) {
+export async function updateEvent(data, user_id, id) {
   const q = `
     UPDATE events
       SET title = $1, 
@@ -170,7 +170,7 @@ export async function updateEvent(title, text, seats, date, startDate, endDate, 
         id = $10   
   `;
   try {
-    const result = await query(q, [title, text, seats, date, startDate, endDate, location, user_id, event_type_id, id]);
+    const result = await query(q, [data.title, data.text, data.seats, data. date, data.startDate, data.endDate, data.location, user_id, data.type, id]);
     return result.rows;
   } catch (e) {
     console.error('There is no event with this id');
