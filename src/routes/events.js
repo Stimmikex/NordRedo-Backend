@@ -1,10 +1,17 @@
 import express from 'express';
-import { createEvent, getAllEventTypes, getEvents, getEventById, getEventType, signUp, signOut, getSignupByEventId, countRegistered, ifRegister, deleteEvent, updateEvent } from '../dataOut/events.js'
-import xss from 'xss';
-import { body, validationResult } from 'express-validator';
-import {
-    findById,
-  } from '../dataOut/users.js';
+import { 
+  createEvent,
+  getAllEventTypes,
+  getEvents, getEventById,
+  getEventType,
+  signUp,
+  signOut,
+  getSignupByEventId,
+  countRegistered,
+  ifRegister,
+  deleteEvent,
+  updateEvent,
+} from '../dataOut/events.js'
 
 export let routerEvent = express.Router();
 
@@ -33,41 +40,71 @@ routerEvent.get('/event/:data?', async (req, res) => {
 });
 
 routerEvent.post('/event/:data?', ensureLoggedIn, async (req, res) => {
-  const id = req.params.data;
-  const event = await getEventById(id);
-  const user = await findById(req.user.id);
-  await signUp(null, user.id, event.id);
-  console.info('Data added');
+  const user = req.user;
+  if (typeof user !== 'undefined') {
+    if (user.role_id === 3) {
+      const id = req.params.data;
+      const event = await getEventById(id);
+      await signUp(null, user.id, event.id);
+      console.info('Data added');
+    }
+  } else {
+    console.info('User needs to be admin');
+  }
 });
 
 routerEvent.post('/event/:data?/sign-out', ensureLoggedIn, async (req, res) => {
-  const id = req.params.data;
-  const event = await getEventById(id);
-  const user = await findById(req.user.id);
-  await signOut(user.id, event.id);
-  console.info('Data added');
+  const user = req.user;
+  if (typeof user !== 'undefined') {
+    if (user.role_id === 3) {
+      const id = req.params.data;
+      const event = await getEventById(id);
+      await signOut(user.id, event.id);
+      console.info('Data added');
+    }
+  } else {
+    console.info('User needs to be admin');
+  }
 });
 
 routerEvent.patch('/event/update/:data?', ensureLoggedIn, async (req, res) => {
-  const id = req.params.data;
-  const data = req.body;
-  const user = await findById(req.user.id);
-  await updateEvent(data, user, id);
-  console.info('Data updated');
+  const user = req.user;
+  if (typeof user !== 'undefined') {
+    if (user.role_id === 3) {
+      const id = req.params.data;
+      const data = req.body;
+      await updateEvent(data, user, id);
+      console.info('Data updated');
+    }
+  } else {
+    console.info('User needs to be admin');
+  }
 });
 
 routerEvent.delete('/event/delete/:data?', ensureLoggedIn, async (req, res) => {
-  const id = req.params.data;
-  const event = await getEventById(id);
-  const user = await findById(req.user.id);
-  await deleteEvent(user.id, event.id);
-  console.info('Data deleted');
+  const user = req.user;
+  if (typeof user !== 'undefined') {
+    if (user.role_id === 3) {
+      const id = req.params.data;
+      const event = await getEventById(id);
+      await deleteEvent(user.id, event.id);
+      console.info('Data deleted');
+    }
+  } else {
+    console.info('User needs to be admin');
+  }
 });
 
 routerEvent.post('/add/event', ensureLoggedIn, async (req, res) => {
-  const data = req.body;
-  const user_id = req.user.id;
-  await createEvent(data, user_id);
-  console.info('Data added');
+  const user = req.user;
+  if (typeof user !== 'undefined') {
+    if (user.role_id === 3) {
+      const data = req.body;
+      await createEvent(data, user.id);
+      console.info('Data added');
+    }
+  } else {
+    console.info('User needs to be admin');
+  }
 });
   
