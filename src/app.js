@@ -9,8 +9,8 @@ import { routerStore } from './routes/store.js';
 import { getEvents } from './dataOut/events.js'
 import {
   comparePasswords,
-  findByUsername,
-  findById,
+  getUserByUsername,
+  getUserByID,
 } from './dataOut/users.js';
 
 dotenv.config();
@@ -40,51 +40,17 @@ app.use(session({
   saveUninitialized: false,
 }));
 
-async function strat(username, password, done) {
-  try {
-    const user = await findByUsername(username);
-
-    if (!user) {
-      return done(null, false);
-    }
-
-    // Verður annað hvort notanda hlutur ef lykilorð rétt, eða false
-    const result = await comparePasswords(password, user.password);
-
-    return done(null, result ? user : false);
-  } catch (err) {
-    console.error(err);
-    return done(err);
-  }
-}
-
-passport.use(new Strategy(strat));
-
-passport.serializeUser((user, done) => {
-  console.log('user :>> ', user);
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await findById(id);
-    return done(null, user);
-  } catch (error) {
-    return done(error);
-  }
-});
-
+app.use(express.json());
 app.use(passport.initialize());
-app.use(passport.session());
 
 app.get('/', async (req, res) => {
   const events = await getEvents();
   res.json(events);
 });
 
-app.use(routerUser);
-app.use(routerEvent);
-app.use(routerStore);
+app.use('/users', routerUser);
+app.use('/event', routerEvent);
+app.use('/store', routerStore);
 
 app.listen(port, () => {
   console.info(`Server running at http://localhost:${port}/`);

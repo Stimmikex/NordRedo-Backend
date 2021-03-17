@@ -1,84 +1,179 @@
-import express from 'express';
-import passport from 'passport';
-import { Strategy } from 'passport-local';
+// users.js
+import dotenv from 'dotenv';
+import express from "express";
+import * as users from "../dataOut/users.js";
+import { body, query,param, validationResult } from "express-validator";
+import passport, { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
 
-import {
-    comparePasswords,
-    findByUsername,
-    findById,
-    createUser,
-  } from '../dataOut/users.js';
+dotenv.config();
 
-export let routerUser = express.Router();
+export const routerUser = express.Router();
 
-  function ensureLoggedIn(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
+routerUser.get('/',
+  requireAdminAuthentication,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()})
     }
-  
-    return res.redirect('/login');
-  }
-  
-  // hér væri hægt að bæta við enn frekari (og betri) staðfestingu á gögnum
-  async function validateUser(username, password) {
-    if (typeof username !== 'string' || username.length < 2) {
-      return 'Notendanafn verður að vera amk 2 stafir';
+    try {
+      const items = await users.getAllUsers();
+      res.json(items);
+    } catch (error) {
+      console.error(error)
     }
-  
-    const user = await findByUsername(username);
-  
-    // Villa frá findByUsername
-    if (user === null) {
-      return 'Gat ekki athugað notendanafn';
+  });
+
+  routerUser.post('/register',
+  body('username')
+    .trim()
+    .isLength({ min: 1, max: 256 })
+    .withMessage('username is required, max 256 characters')
+    .custom((value) => {
+      return users.getUserByUsername(value).then(user => {
+        if(user) {
+          return Promise.reject('username already exists');
+        }
+      });
+    }),
+  body('password')
+    .trim()
+    .isLength({ min: 10, max: 256 })
+    .withMessage('Password is required, min 10 characters, max 256 characters'),
+  async (req, res) => {
+    
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
     }
-  
-    if (user) {
-      return 'Notendanafn er þegar skráð';
-    }
-  
-    if (typeof password !== 'string' || password.length < 6) {
-      return 'Lykilorð verður að vera amk 6 stafir';
-    }
-  
-    return null;
-  }
-  
-  async function register(req, res, next) {
+
     const { username, password } = req.body;
-    const validationMessage = await validateUser(username, password);
-    console.info(validationMessage)
-    await createUser(username, password);
-    return next();
+
+    const createdUser = await users.createUser(username, password);
+
+    if (createdUser) {
+      return res.json({
+        id: createdUser.id, 
+        username: createdUser.name,
+        token: createTokenForUser(createdUser.id),
+      });
+    }
+
+    return res.json({ error: 'Error registering' });
+});
+
+routerUser.post('/login', 
+  body('username')
+    .trim()
+    .isLength({ min: 1, max: 256 })
+    .withMessage('username is required, max 256 characters'),
+  body('password')
+    .trim()
+    .isLength({ min: 10, max: 256 })
+    .withMessage('password is required, min 10 characters, max 256 characters'),
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()){
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { username, password } = req.body;
+
+    const user = await users.getUserByUsername(username);
+
+    if (!user) {
+      return res.status(401).json({ errors: [{
+        value: username,
+        msg: "username or password incorrect",
+        param: 'username', 
+        location: 'body'
+      }]});
+    }
+
+    const passwordIsCorrect = users.comparePasswords(password, user.password);
+
+    if (passwordIsCorrect) {
+      const token = createTokenForUser(user.id);
+      return res.json({
+        "user": {
+          id: user.id,
+          username: user.name,
+          role_id: user.role_id
+        },
+        token,
+        expiresIn: "not implemented",
+      });
+    }
+
+    return res.status(401).json({ errors: [{
+      value: username,
+      msg: "username or password incorrect",
+      param: 'username', 
+      location: 'body'
+    }]});
+});
+
+routerUser.get('/me',
+  requireAuthentication,
+  (req, res) => {
+    res.json({
+      id: req.user.id,
+      username: req.user.username,
+      role_id: req.user.role_id,
+    });
+  });
+
+
+routerUser.patch('/me', requireAuthentication,
+  body('password')
+    .if(body('password').exists())
+    .isLength({ min: 10, max: 256 })
+    .withMessage('password must be from 1 to 256 characters long'),
+
+  async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
+    const { email, password } = req.body;
+
+    if(!password) {
+      return res.status(400).json({
+        errors: [{
+          value: req.body,
+          msg: 'require password',
+          param: '',
+          location:'body'
+        }]
+      })
+    }
+
+    req.user.password = password ? password : req.user.password;
+
+    const user = await users.updateUser(req.user);
+    
+    res.json({
+      id: user.id,
+      username: user.name,
+      admin: user.role_id,
+    });
+  });
+
+  
+routerUser.get('/:id',
+requireAdminAuthentication,
+param('id')
+  .isInt()
+  .withMessage('id must be integer'),
+async (req, res) => {
+  const errors = validationResult(req);
+  if(!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-  
-  routerUser.post(
-    '/register',
-    register,
-    passport.authenticate('local', {
-      failureMessage: 'Notandanafn eða lykilorð vitlaust.',
-      failureRedirect: '/login',
-    }),
-    (req, res) => {
-      res.redirect('/admin');
-    },
-  );
-  
-  routerUser.post(
-    '/login',
-    passport.authenticate('local', {
-      failureMessage: 'Notandanafn eða lykilorð vitlaust.',
-      failureRedirect: '/login',
-    }),
-    (req, res) => {
-      res.redirect('/admin');
-    },
-  );
-  
-  routerUser.get('/logout', (req, res) => {
-    req.logout();
-    res.redirect('/');
-  });
-  
-  routerUser.get('/admin', ensureLoggedIn, (req, res) => {
-    res.redirect('/');
-  });
+
+  const data = await users.getUserByID(req.params.id);
+  if (data) return res.json( data );
+  return res.status(404).json({ msg: 'User not found' });
+});
