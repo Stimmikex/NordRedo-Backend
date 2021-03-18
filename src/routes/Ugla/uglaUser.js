@@ -2,7 +2,7 @@ import express from 'express';
 import { query } from '../../dataOut/utils.js'
 import { requireAdminAuthentication } from '../../dataOut/login.js'
 import ldap from 'ldapjs';
-import { createUglaUser, updateUglaUser, deleteUglaUser } from './dataOut/user.js';
+import { createUglaUser, updateUglaUser, deleteUglaUser } from './dataOut/uglaUser.js';
 
 export const routerAdmin = express.Router();
 
