@@ -5,7 +5,7 @@ import passport from 'passport';
 import { routerEvent } from './routes/events.js';
 import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
-import { routerAdmin } from './routes/ugla/user.js';
+import { routerAdmin } from './routes/Ugla/uglaUser.js';
 import { getEvents } from './dataOut/events.js'
 
 dotenv.config();
