@@ -1,12 +1,10 @@
-var express = require('express');
-var router = express.Router();
-var dbUtils = require('../../utils/db-utils.js');
-var bits = require('sqlbits'), DELETE = bits.DELETE;
-var protection = require('../../utils/protection-utils.js');
-var logger = require('../../utils/logger-utils').logger;
+import express from 'express';
+import { query } from '../../dataOut/utils.js'
+import { requireAdminAuthentication } from '../../dataOut/login.js'
+import ldap from 'ldapjs';
+import { createUglaUser, updateUglaUser, deleteUglaUser } from './dataOut/user.js';
 
-var ldap = require('ldapjs');
-
+export const routerAdmin = express.Router();
 
 /**
  * Handles post requests to admin/users
@@ -18,30 +16,23 @@ var ldap = require('ldapjs');
  * @param  {object} req    request object
  * @param  {object} res    response object
  */
-router.post('/add/user', protection.csrfProtection, function(req, res) {
-    var bindDn = 'uid={uid},ou=People,dc=hi,dc=is'
-        .replace('{uid}', req.body.username);
-    var client = ldap.createClient({
+routerAdmin.post('/add/user', requireAdminAuthentication, async (req, res) => {
+    const bindDn = `uid=${req.body.username},ou=People,dc=hi,dc=is`;
+    const client = ldap.createClient({
       url: 'ldaps://ldap.hi.is:636'
     });
-    client.search(bindDn, function(err, ldapRes) {
+    client.search(bindDn, (err, ldapRes) => {
       if(err) {
           res.send(err);
       }
-      ldapRes.on('searchEntry', function(entry) {
-        var user = entry.object;
+      ldapRes.on('searchEntry', async (entry) => {
+        const user = entry.object;
         newUser(user);
       });
-      // ldapRes.on('searchReference', function(referral) {
-      //   console.log('referral: ' + referral.uris.join());
-      // });
       ldapRes.on('error', function() {
         res.status('400'); // status: Bad Request
         res.send('Þessi notandi er ekki til í uglunni.');
       });
-      // ldapRes.on('end', function(result) {
-      //   console.log('status: ' + result.status);
-      // });
     });
 
     /**
@@ -52,11 +43,11 @@ router.post('/add/user', protection.csrfProtection, function(req, res) {
      */
     function checkIfUserExists(ugluName) {
       // Database insert and user responce
-      var query = "SELECT exists(SELECT 1 FROM "+
+      var q = "SELECT exists(SELECT 1 FROM "+
                   "Users WHERE username = $1) AS exists";
       var params = [ugluName];
 
-      dbUtils.queryDb(query, params);
+      return query(q, params);
     }
     /**
      * This function is called when admins try to creata a new user.
@@ -66,7 +57,7 @@ router.post('/add/user', protection.csrfProtection, function(req, res) {
      * @return {[type]}      [description]
      */
     function newUser(user) {
-      if (checkIfUserExists(user.uid === null)) {
+      if (checkIfUserExists(user.id === null)) {
           insertNewUser(user);
       } else {
         res.status('400'); // status: Bad Request
@@ -80,43 +71,13 @@ router.post('/add/user', protection.csrfProtection, function(req, res) {
      * @param  {Object} user is the hi user we get from the LDAP server.
      */
     function insertNewUser(user) {
-      var ugluName = user.uid || '';
-      var name = user.cn || '';
-      var email = user.mail || '';
-      var phone = user.telephoneNumber || '';
-      // Defalt to non-privileged user
-      req.body.access_id = req.body.access_id || 2;
+      const ugluName = user.uid || '';
+      const name = user.cn || '';
+      const email = user.mail || '';
+      const phone = user.telephoneNumber || '';
+      const role_id = req.body.access_id || 1;
 
-      // VEIT EKKI AFHVERJU ÞETTA KLIKKAR...
-      // var query = "WITH insUsers AS (INSERT INTO users "+
-      //   "(username, password, access_id, date_joined, last_login, active, season_id) "+
-      //     "VALUES ($1, '!', $2, $3, $3, true, $4) RETURNING id) "+
-      //   "INSERT INTO profile (users_id, name, receive_sms, email1, phonenumber1) "+
-      //   "SELECT insUsers.id, $5, true, $6, $7 FROM insUsers";
-      // var params = [
-      //   ugluName, req.body.access_id, new Date().toUTCString(),
-      //   dbUtils.currentSeason, name, email, phone
-      // ];
-
-      // Database insert and user responce
-     var query = "WITH insUsers AS (INSERT INTO users "+
-       "(username, password, access_id, date_joined, last_login, active, season_id) "+
-         "VALUES ('"+ugluName+"','!',"+parseInt(req.body.access_id)+", '"+
-           new Date().toUTCString()+"', '"+new Date().toUTCString()+"', true, "+dbUtils.currentSeason+") RETURNING id)"+
-       " INSERT INTO profile (users_id, name, receive_sms, email1, phonenumber1) SELECT insUsers.id, '"+
-         name+"', true, '"+email+"', '"+phone+"' FROM insUsers";
-
-      dbUtils.queryDb(query, null, function(err) {
-        if(!err) {
-          res.send('New user added successfully.');
-        } else {
-          logger.error(err.message, {
-            ACTION: 'inserting new user into database',
-            DIRECTORY: module.filename,
-            NEW_USER: ugluName }
-          );
-        }
-      });
+      createUglaUser(ugluName, role_id, name, email, phone);
     }
 });
 
@@ -127,31 +88,9 @@ router.post('/add/user', protection.csrfProtection, function(req, res) {
  * @param  {object} req    request object
  * @param  {object} res    response object
  */
-router.delete('/', protection.csrfProtection, function(req, res) {
-
-  var query = DELETE.FROM('profile')
-                .WHERE('users_id=', req.body.userId)._(';')
-              .DELETE.FROM('users')
-                .WHERE('id=', req.body.userId);
-  // var query = 'DELETE FROM profile WHERE users_id = $1; '+
-  //             'DELETE FROM users WHERE id = $1';
-  // var params = [req.body.userId];
-  dbUtils.queryDb(query, null, function(err) {
-    if(!err) {
-      res.send('User was successfully deleted.');
-      //TODO: logga hver er að deleta notendum?
-    } else {
-      //should never happen
-      logger.error(err.message, {
-        ACTION: 'deleting user',
-        DIRECTORY: module.filename,
-        DELETED_USER: req.body.userId,
-        PERFORMED_BY: req.session.user.ugluName }
-      );
-      res.status(500);
-      res.send('Villa kom upp.');
-    }
-  });
+ routerAdmin.delete('/', requireAdminAuthentication, async (req, res) => {
+  const data = req.body;
+  await deleteUglaUser(data.user_id);
 });
 
 /**
@@ -160,28 +99,7 @@ router.delete('/', protection.csrfProtection, function(req, res) {
  * @param  {object} req    request object
  * @param  {object} res    response object
  */
-router.put('/', protection.csrfProtection, function(req, res) {
-
-  var query = "UPDATE users SET access_id = $1 WHERE id = $2";
-  var params = [req.body.accessLvl, req.body.uId];
-
-  dbUtils.queryDb(query, params, function(err) {
-    if(!err) {
-      res.send('User updated successfully');
-    } else {
-      //should never happen
-      logger.error(err.message, {
-        ACTION: 'updating user access_id',
-        DIRECTORY: module.filename,
-        UPDATED_USER: req.body.uId,
-        ACCESS_ID: req.body.accessLvl }
-      );
-      res.status(500);
-      res.send('Villa kom upp.');
-    }
-  });
-
+ routerAdmin.patch('/', requireAdminAuthentication, async (req, res) => {
+  const data = req.body;
+  await updateUglaUser(data.role_id, data.user_id);
 });
-
-
-module.exports = router;

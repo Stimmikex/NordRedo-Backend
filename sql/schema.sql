@@ -3,12 +3,24 @@ CREATE TABLE IF NOT EXISTS roles (
     name character varying(255) NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS users (
-    id serial primary key,
-    username character varying(255) NOT NULL,
-    password character varying(255) NOT NULL,
-    role_id INTEGER,
-    FOREIGN KEY (role_id) REFERENCES roles (id)
+-- CREATE TABLE IF NOT EXISTS users (
+--     id serial primary key,
+--     username character varying(255) NOT NULL,
+--     password character varying(255) NOT NULL,
+--     role_id INTEGER,
+--     FOREIGN KEY (role_id) REFERENCES roles (id)
+-- );
+
+CREATE TABLE IF NOT EXISTS Users (
+	id SERIAL PRIMARY KEY NOT NULL,
+	username CHARACTER VARYING(255) NOT NULL,
+	password CHARACTER VARYING(255) NOT NULL,
+	role_id INTEGER NOT NULL,
+	date_joined TIMESTAMP NOT NULL,
+	last_login TIMESTAMP NOT NULL,
+	active BOOLEAN NOT NULL,
+	UNIQUE (username),
+	FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
 CREATE TABLE IF NOT EXISTS event_types (
@@ -78,4 +90,16 @@ CREATE TABLE IF NOT EXISTS items (
     type_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (type_id) REFERENCES item_types (id)
+);
+
+CREATE TABLE IF NOT EXISTS profile (
+	username CHARACTER VARYING(255) NOT NULL,
+	name CHARACTER VARYING(255),
+	birthday DATE NULL,
+	phonenumber1 CHARACTER VARYING(8) NULL,
+	email1 CHARACTER VARYING(255) NULL,
+	image CHARACTER VARYING(255) NULL,
+	UNIQUE (username),
+	PRIMARY KEY(username),
+	FOREIGN KEY (username) REFERENCES Users(username)
 );

@@ -2,16 +2,11 @@ import express from 'express';
 import session from 'express-session';
 import dotenv from 'dotenv';
 import passport from 'passport';
-import { Strategy } from 'passport-local';
 import { routerEvent } from './routes/events.js';
 import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
+import { routerAdmin } from './routes/ugla/user.js';
 import { getEvents } from './dataOut/events.js'
-import {
-  comparePasswords,
-  getUserByUsername,
-  getUserByID,
-} from './dataOut/users.js';
 
 dotenv.config();
 
@@ -51,6 +46,7 @@ app.get('/', async (req, res) => {
 app.use('/users', routerUser);
 app.use('/event', routerEvent);
 app.use('/store', routerStore);
+app.use('/admin', routerAdmin);
 
 app.listen(port, () => {
   console.info(`Server running at http://localhost:${port}/`);

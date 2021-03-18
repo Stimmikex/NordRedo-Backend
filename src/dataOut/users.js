@@ -2,10 +2,10 @@ import bcrypt from 'bcrypt';
 import { query } from './utils.js';
 
 export async function createUser(username, password) {
-  const q = 'INSERT INTO Users (username, password, role_id) VALUES ($1, $2, $3) RETURNING *';
+  const q = 'INSERT INTO Users (username, password, role_id, date_joined, last_login, active) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
 
   try {
-    const result = await query(q, [username, await bcrypt.hash(password, 10), 1]);
+    const result = await query(q, [username, await bcrypt.hash(password, 10), 1, new Date().toUTCString(), new Date().toUTCString(), true]);
     if (result.rowCount === 1){
       return result.rows[0];
     }
