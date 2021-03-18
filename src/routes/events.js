@@ -72,4 +72,10 @@ routerEvent.post('/add', requireAdminAuthentication, async (req, res) => {
   await createEvent(data, user.id);
   res.send('Data added');
 });
+
+routerEvent.get('/list/:data?', async (req, res) => {
+  const id = req.params.data;
+  const data = await getSignupByEventId(id);
+  res.json(data);
+});
   
