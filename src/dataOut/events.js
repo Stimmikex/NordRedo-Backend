@@ -27,10 +27,8 @@ export async function createEvent(title, text, seats, date, startDate, endDate, 
     const result = await query(q, [title, text, seats, date, startDate, endDate, location, user_id, event_type_id]);
     return result.rows[0];
   } catch (e) {
-    console.error('Could not make event');
+    return { error: 'Could not make event'};
   }
-
-  return null;
 }
 
 export async function signUp(status, user, event) {
@@ -66,7 +64,7 @@ export async function getSignupByEventId(id) {
   const q = 'SELECT signup.id, signup_status_id, event_id, username, users.id FROM signup INNER JOIN users ON (signup.user_id = users.id) WHERE event_id = $1';
   try {
     const result = await query(q, [id]);
-    return result.rows;
+    return result.rows[0];
   } catch (e) {
     console.error('There is no event with this id');
   }
@@ -77,7 +75,7 @@ export async function countRegistered(id) {
   const q = 'SELECT COUNT(*) FROM signup WHERE event_id = $1';
   try {
     const result = await query(q, [id]);
-    return result.rows;
+    return result.rows[0];
   } catch (e) {
     console.error('There is no event with this id');
   }
@@ -104,7 +102,7 @@ export async function getAllEventTypes() {
   const q = 'SELECT * FROM event_types';
   try {
     const result = await query(q);
-    return result.rows;
+    return result.rows[0];
   } catch (e) {
     console.error('There is no event with this id');
   }
@@ -131,7 +129,7 @@ export async function getEvents() {
   const q = 'SELECT * FROM events';
   try {
     const result = await query(q);
-    return result.rows;
+    return result.rows[0];
   } catch (e) {
     console.error('There is no event with this id');
   }
@@ -171,7 +169,7 @@ export async function updateEvent(data, user_id, id) {
   `;
   try {
     const result = await query(q, [data.title, data.text, data.seats, data. date, data.startDate, data.endDate, data.location, user_id, data.type, id]);
-    return result.rows;
+    return result.rows[0];
   } catch (e) {
     console.error('There is no event with this id');
   }
