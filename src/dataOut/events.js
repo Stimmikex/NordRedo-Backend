@@ -132,7 +132,7 @@ export async function getEvents() {
             INNER JOIN event_types ON event_types.id = events.event_type_id`;
   try {
     const result = await query(q);
-    return result.rows[0];
+    return result.rows;
   } catch (e) {
     console.error('There is no event with this id');
   }
