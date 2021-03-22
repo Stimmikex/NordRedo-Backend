@@ -126,7 +126,10 @@ export async function getEventType(id) {
 }
 
 export async function getEvents() {
-  const q = 'SELECT * FROM events';
+  const q = `SELECT title, text, seats, date, location, rating, users.username, event_types.name 
+              FROM events 
+            INNER JOIN users ON users.id = events.user_id 
+            INNER JOIN event_types ON event_types.id = events.event_type_id`;
   try {
     const result = await query(q);
     return result.rows[0];
