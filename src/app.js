@@ -13,30 +13,17 @@ dotenv.config();
 const app = express();
 
 const {
-  PORT: port = 3000,
-  SESSION_SECRET: sessionSecret,
   DATABASE_URL: databaseUrl,
 } = process.env;
 
-if (!sessionSecret || !databaseUrl) {
+if (!databaseUrl) {
   console.error('Vantar .env gildi');
   process.exit(1);
 }
 
-app.set('views', 'views');
-app.set('view engine', 'ejs');
-
-app.use(express.static('public'));
-
 app.use(express.urlencoded({ extended: true }));
-app.use(session({
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-}));
 
 app.use(express.json());
-app.use(passport.initialize());
 
 app.get('/', async (req, res) => {
   const events = await getEvents();
