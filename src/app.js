@@ -48,6 +48,7 @@ app.use('/event', routerEvent);
 app.use('/store', routerStore);
 app.use('/admin', routerAdmin);
 
-app.listen(port, () => {
-  console.info(`Server running at http://localhost:${port}/`);
+const PORT = process.env.PORT || 8000;
+app.listen(PORT, () => {
+  console.info(`Server running at http://localhost:${PORT}/`);
 });
