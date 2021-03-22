@@ -2,7 +2,7 @@ import {
   body, query, param, validationResult,
 } from 'express-validator';
 import { getEventById } from '../../dataOut/events.js';
-import { getItemById } from '../../dataOut/stores.js';
+// import { getItemById } from '../../dataOut/items.js';
 import { getUserByUsername } from '../../dataOut/users.js';
 // Þetta disable verður að vera hér svo þessi validation
 // rules haga sér rétt
@@ -13,7 +13,7 @@ export const eventRules = () => [
     .isLength({ max: 128 })
     .withMessage('title is required, max 128 characters'),
   body('text')
-    .isText()
+    .isString()
     .withMessage('text must be a TEXT'),
   body('seats')
     .isInt()
@@ -116,20 +116,20 @@ export const registerRules = () => [
     .withMessage('Password is required, min 10 characters, max 256 characters'),
 ];
 
-export async function itemExists(req, res, next) {
-const { itemId } = req.params;
-  const item = await getItemById(itemId);
-  if (!item) {
-    return res.status(404).json({
-      errors: [{
-        param: 'id',
-        msg: 'Could not find item with this id',
-        location: 'params',
-      }],
-    });
-  }
-  return next();
-}
+// export async function itemExists(req, res, next) {
+// const { itemId } = req.params;
+//   const item = await getItemById(itemId);
+//   if (!item) {
+//     return res.status(404).json({
+//       errors: [{
+//         param: 'id',
+//         msg: 'Could not find item with this id',
+//         location: 'params',
+//       }],
+//     });
+//   }
+//   return next();
+// }
 
 export async function eventExists(req, res, next) {
   const { eventId } = req.params;
