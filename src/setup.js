@@ -58,6 +58,17 @@ async function main() {
     console.error('Villa við að búa til töflu:', e.message);
     return;
   }
+
+  try {
+    const q1 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(q1, ['member']);
+    const q2 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(q2, ['gov']);
+    const q3 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(q3, ['admin']);
+  } catch (error) {
+    console.error('Villa við að búa til notenda');
+  }
 }
 
 main().catch((err) => {

@@ -51,6 +51,8 @@ routerUser.get('/',
 
     const createdUser = await users.createUser(username, password);
 
+    console.log(createdUser);
+
     if (createdUser) {
       return res.json({
         id: createdUser.id, 
