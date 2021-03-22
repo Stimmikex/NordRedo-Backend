@@ -10,7 +10,7 @@
     "build": "concurrently npm:build:*",
     "dev": "npm run build:sass && concurrently npm:dev:*",
     "start-dev": "nodemon ./src/app.js",
-    "setup": "node ./src/setup.js",
+    "setup": "node ./sql/initdb.js",
     "start": "node ./src/app.js"
   },
   "author": "",
