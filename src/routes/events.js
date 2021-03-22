@@ -13,6 +13,8 @@ import {
   updateEvent,
 } from '../dataOut/events.js'
 
+import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
+
 import { requireAdminAuthentication } from '../dataOut/login.js'
 
 export let routerEvent = express.Router();
@@ -29,54 +31,71 @@ routerEvent.get('/', async (req, res) => {
  * Return event by id
  */
 
-routerEvent.post('/sign-in/:data?', requireAdminAuthentication, async (req, res) => {
-  const user = req.user;
-  const id = req.params.data;
-  const event = await getEventById(id);
-  await signUp(null, user.id, event.id);
-  res.json({msg: 'User signed up'});
+routerEvent.post('/sign-in/:data?', requireAdminAuthentication,
+  paramIdRules(),
+  async (req, res) => {
+    const user = req.user;
+    const id = req.params.data;
+    const event = await getEventById(id);
+    await signUp(null, user.id, event.id);
+    res.json({msg: 'User signed up'});
+  });
+
+routerEvent.post('/sign-out/:data?/', requireAdminAuthentication,
+  paramIdRules(),
+  async (req, res) => {
+    const user = req.user;
+    const id = req.params.data;
+    const event = await getEventById(id);
+    await signOut(user.id, event.id);
+    res.json({msg: 'User signed out'});
+  });
+
+routerEvent.patch('/update/:data?', requireAdminAuthentication,
+  patchEventRules(),
+  paramIdRules(),
+  checkValidationResult,
+  async (req, res) => {
+    const user = req.user;
+    const id = req.params.data;
+    const data = req.body;
+    await updateEvent(data, user, id);
+    res.json({msg: data + 'has been updated'});
+  });
+
+routerEvent.delete('/delete/:data?', requireAdminAuthentication,
+  paramIdRules(),
+  async (req, res) => {
+    const id = req.params.data;
+    const user = req.user;
+    const event = await getEventById(id);
+    await deleteEvent(user.id, event.id);
+    res.json({msg: event + ' Has been deleted'});
+  });
+
+routerEvent.post('/add', requireAdminAuthentication,
+  eventRules(),
+  checkValidationResult,
+  async (req, res) => {
+    const data = req.body;
+    const user = req.user;
+    const event = await createEvent(data, user.id);
+    res.json({msg: event + ' Has been added'});
+  });
+
+routerEvent.get('/list/:data?',
+  paramIdRules(),
+  async (req, res) => {
+    const id = req.params.data;
+    const data = await getSignupByEventId(id);
+    res.json(data);
 });
 
-routerEvent.post('/sign-out/:data?/', requireAdminAuthentication, async (req, res) => {
-  const user = req.user;
-  const id = req.params.data;
-  const event = await getEventById(id);
-  await signOut(user.id, event.id);
-  res.json({msg: 'User signed out'});
-});
-
-routerEvent.patch('/update/:data?', requireAdminAuthentication, async (req, res) => {
-  const user = req.user;
-  const id = req.params.data;
-  const data = req.body;
-  await updateEvent(data, user, id);
-  res.json({msg: data + 'has been updated'});
-});
-
-routerEvent.delete('/delete/:data?', requireAdminAuthentication, async (req, res) => {
-  const id = req.params.data;
-  const user = req.user;
-  const event = await getEventById(id);
-  await deleteEvent(user.id, event.id);
-  res.json({msg: event + ' Has been deleted'});
-});
-
-routerEvent.post('/add', requireAdminAuthentication, async (req, res) => {
-  const data = req.body;
-  const user = req.user;
-  const event = await createEvent(data, user.id);
-  res.json({msg: event + ' Has been added'});
-});
-
-routerEvent.get('/list/:data?', async (req, res) => {
-  const id = req.params.data;
-  const data = await getSignupByEventId(id);
-  res.json(data);
-});
-
-routerEvent.get('/:data?', async (req, res) => {
-  const id = req.params.data;
-  const event = await getEventById(id);
-  res.json(event);
-});
+routerEvent.get('/:data?',
+  paramIdRules(),
+  async (req, res) => {
+    const id = req.params.data;
+    const event = await getEventById(id);
+    res.json(event);
+  });
   
