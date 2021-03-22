@@ -3,7 +3,7 @@ import {
 } from 'express-validator';
 import { getEventById } from '../../dataOut/events.js';
 import { getItemById } from '../../dataOut/stores.js';
-import { getEventById } from '../../dataOut/users.js';
+import { getUserByUsername } from '../../dataOut/users.js';
 // Þetta disable verður að vera hér svo þessi validation
 // rules haga sér rétt
 /* eslint-disable consistent-return */
