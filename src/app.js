@@ -1,7 +1,5 @@
 import express from 'express';
-import session from 'express-session';
 import dotenv from 'dotenv';
-import passport from 'passport';
 import { routerEvent } from './routes/events.js';
 import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
