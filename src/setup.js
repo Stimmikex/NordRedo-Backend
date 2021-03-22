@@ -1,6 +1,7 @@
 import pg from 'pg';
 import dotenv from 'dotenv';
 import { promises as fs } from 'fs';
+import { createUser } from '../src/dataOut/users.js';
 
 async function readFileAsync(sql) {
   try {
@@ -60,14 +61,48 @@ async function main() {
   }
 
   try {
-    const q1 = 'INSERT INTO roles (name) VALUES ($1)';
-    await query(q1, ['member']);
-    const q2 = 'INSERT INTO roles (name) VALUES ($1)';
-    await query(q2, ['gov']);
-    const q3 = 'INSERT INTO roles (name) VALUES ($1)';
-    await query(q3, ['admin']);
+    const role_q1 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(role_q1, ['member']);
+    const role_q2 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(role_q2, ['gov']);
+    const role_q3 = 'INSERT INTO roles (name) VALUES ($1)';
+    await query(role_q3, ['admin']);
+    console.info(
+      { 
+        roles: {
+          role1: 'nember',
+          role2: 'gov',
+          role3: 'admin',
+        },
+        msg: 'roles added',
+      }
+    );
+    const user = await createUser('tester', 'testingtester');
+    console.info('added: ' + user.username)
+    const eventType_q1 = 'INSERT INTO event_types (name) VALUES ($1)';
+    await query(eventType_q1, ['viso']);
+    const eventType_q2 = 'INSERT INTO event_types (name) VALUES ($1)';
+    await query(eventType_q2, ['online']);
+    console.info(
+      { 
+        roles: {
+          eventType1: 'viso',
+          eventType2: 'online',
+
+        },
+        msg: 'eventType added',
+      }
+    );
+    const event_q1 = `
+      INSERT INTO
+        events (title, text, seats, date, startDate, endDate, location, user_id, event_type_id)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING *
+    `;
+    const event = await query(event_q1, ['test', 'testingTester', 3, new Date().toUTCString(), new Date().toUTCString(), new Date().toUTCString(), 'my house', 1, 1]);
+    console.info(event);
   } catch (error) {
-    console.error('Villa við að búa til notenda');
+    console.error('Villa við að búa til setup');
   }
 }
 

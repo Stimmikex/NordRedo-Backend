@@ -139,7 +139,7 @@ routerUser.patch('/me', requireAuthentication,
       return res.status(400).json({ errors: errors.array() })
     }
 
-    const { email, password } = req.body;
+    const { password } = req.body;
 
     if(!password) {
       return res.status(400).json({
