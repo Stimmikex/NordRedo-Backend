@@ -1,8 +1,9 @@
 import {
   body, query, param, validationResult,
 } from 'express-validator';
-import { getEventById, getItemById } from './db.js.js';
-import * as userDb from './userdb.js.js';
+import { getEventById } from '../../dataOut/events.js';
+import { getItemById } from '../../dataOut/stores.js';
+import { getEventById } from '../../dataOut/users.js';
 // Þetta disable verður að vera hér svo þessi validation
 // rules haga sér rétt
 /* eslint-disable consistent-return */
@@ -86,16 +87,6 @@ export const patchUserRules = () => [
     .if(body('password').exists())
     .isLength({ min: 10, max: 256 })
     .withMessage('password must be from 1 to 256 characters long'),
-  body('email')
-    .if(body('email').exists())
-    .isEmail()
-    .withMessage('email must be an email, example@example.com')
-    .normalizeEmail()
-    .custom((value) => userDb.getUserByEmail(value).then((user) => {
-      if (user) {
-        return Promise.reject('email already exists');
-      }
-    })),
 ];
 
 export const loginRules = () => [
@@ -114,19 +105,9 @@ export const registerRules = () => [
     .trim()
     .isLength({ min: 1, max: 256 })
     .withMessage('username is required, max 256 characters')
-    .custom((value) => userDb.getUserByName(value).then((user) => {
+    .custom((value) => getUserByUsername(value).then((user) => {
       if (user) {
         return Promise.reject('username already exists');
-      }
-    })),
-  body('email')
-    .trim()
-    .isEmail()
-    .withMessage('email is required, max 256 characters')
-    .normalizeEmail()
-    .custom((value) => userDb.getUserByEmail(value).then((user) => {
-      if (user) {
-        return Promise.reject('email already exists');
       }
     })),
   body('password')
