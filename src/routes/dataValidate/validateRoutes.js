@@ -14,14 +14,14 @@ export const eventRules = () => [
     .withMessage('title is required, max 128 characters'),
   body('text')
     .isString()
-    .withMessage('text must be a TEXT'),
+    .withMessage('text must be a String'),
   body('seats')
     .isInt()
     .isLength({ min: 0, max: 420 })
     .withMessage('Seats is required, max 420 integer number'),
   body('date')
     .isDate()
-    .withMessage('description must be a string'),
+    .withMessage('date must be a date'),
   body('startDate')
     .isDate()
     .withMessage('startDate must be a date'),

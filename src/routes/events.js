@@ -80,7 +80,7 @@ routerEvent.post('/add', requireAdminAuthentication,
     const data = req.body;
     const user = req.user;
     const event = await createEvent(data, user.id);
-    res.json({msg: event + ' Has been added'});
+    res.json({msg: event.title + ' Has been added'});
   });
 
 routerEvent.get('/list/:data?',

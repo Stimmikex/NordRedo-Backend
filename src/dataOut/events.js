@@ -16,15 +16,15 @@ export async function getEventById(id) {
   return null;
 }
 
-export async function createEvent(title, text, seats, date, startDate, endDate, location, user_id, event_type_id) {
+export async function createEvent(data, user_id) {
   const q = `
     INSERT INTO
       events (title, text, seats, date, startDate, endDate, location, user_id, event_type_id)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $9, $8)
     RETURNING *
   `;
   try {
-    const result = await query(q, [title, text, seats, date, startDate, endDate, location, user_id, event_type_id]);
+    const result = await query(q, [data.title, data.text, data.seats, data.date, data.startDate, data.endDate, data.location, data.event_type_id, user_id]);
     return result.rows[0];
   } catch (e) {
     return { error: 'Could not make event'};
