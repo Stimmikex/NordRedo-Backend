@@ -27,9 +27,17 @@ routerEvent.get('/', async (req, res) => {
   res.json(events);
 });
   
+
 /**
  * Return event by id
  */
+routerEvent.get('/sign-in/:data?', async (req, res) => {
+   const user = req.user;
+   const id = req.params.data;
+   const event = await getEventById(id);
+   const data = getRegisteredByUserIdAndEventId(user.id, event.id);
+   res.json(data);
+ });
 
 routerEvent.post('/sign-in/:data?', requireAdminAuthentication,
   paramIdRules(),
