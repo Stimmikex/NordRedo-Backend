@@ -98,20 +98,6 @@ export async function ifRegister(user, event) {
   return null;
 }
 
-export async function getRegisteredByUserIdAndEventId(user, event) {
-  const q = 'SELECT * FROM signup WHERE user_id = $1 AND event_id = $2';
-  try {
-    const result = await query(q, [user, event]);
-    console.log("Testing: " + result.rows[0].id);
-    if(result.rows[0] !== null) {
-      return result.rows;
-    }
-  } catch (e) {
-    console.error('There is no event with this id');
-  }
-  return null;
-}
-
 export async function getAllEventTypes() {
   const q = 'SELECT * FROM event_types';
   try {

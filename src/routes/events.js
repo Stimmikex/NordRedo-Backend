@@ -2,7 +2,8 @@ import express from 'express';
 import { 
   createEvent,
   getAllEventTypes,
-  getEvents, getEventById,
+  getEvents,
+  getEventById,
   getEventType,
   signUp,
   signOut,
@@ -31,12 +32,11 @@ routerEvent.get('/', async (req, res) => {
 /**
  * Return event by id
  */
-routerEvent.get('/sign-in/:data?', async (req, res) => {
-   const user = req.user;
+routerEvent.get('/registered/:data?', async (req, res) => {
    const id = req.params.data;
    const event = await getEventById(id);
-   const data = getRegisteredByUserIdAndEventId(user.id, event.id);
-   res.json(data);
+   const registered = await getSignupByEventId(event.id);
+   res.json(registered);
  });
 
 routerEvent.post('/sign-in/:data?', requireAdminAuthentication,
