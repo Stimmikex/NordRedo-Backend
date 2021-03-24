@@ -64,7 +64,9 @@ export async function getSignupByEventId(id) {
   const q = 'SELECT signup.id, signup_status_id, event_id, username, users.id FROM signup INNER JOIN users ON (signup.user_id = users.id) WHERE event_id = $1';
   try {
     const result = await query(q, [id]);
-    return result.rows[0];
+    if(result.rows[0] !== null) {
+      return result.rows;
+    }
   } catch (e) {
     console.error('There is no event with this id');
   }
