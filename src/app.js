@@ -23,6 +23,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.json());
 
+app.use((_req, res, next) => {
+  res.header(
+    'Access-Control-Allow-Origin', '*',
+  );
+  res.header(
+    'Access-Control-Allow-Methods', 'GET',
+  );
+  next();
+});
+
 app.get('/', async (req, res) => {
   const events = await getEvents();
   res.json(events);
