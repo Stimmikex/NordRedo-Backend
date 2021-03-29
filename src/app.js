@@ -28,7 +28,7 @@ app.use((_req, res, next) => {
     'Access-Control-Allow-Origin', '*',
   );
   res.header(
-    'Access-Control-Allow-Methods', 'GET',
+    'Access-Control-Allow-Methods', '*',
   );
   next();
 });
