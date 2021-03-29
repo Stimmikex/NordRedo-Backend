@@ -99,6 +99,14 @@ routerEvent.get('/list/:data?',
     res.json(data);
 });
 
+routerEvent.get('/count/:data?',
+  paramIdRules(),
+  async (req, res) => {
+    const id = req.params.data;
+    const data = await countRegistered(id);
+    res.json(data);
+});
+
 routerEvent.get('/:data?',
   paramIdRules(),
   async (req, res) => {
