@@ -131,7 +131,9 @@ export async function getEvents() {
   const q = `SELECT events.id, title, text, seats, date, location, rating, users.username AS user_id, event_types.name AS event_type
               FROM events 
             INNER JOIN users ON users.id = events.user_id 
-            INNER JOIN event_types ON event_types.id = events.event_type_id`;
+            INNER JOIN event_types ON event_types.id = events.event_type_id
+            ORDER BY date
+            `;
   try {
     const result = await query(q);
     return result.rows;

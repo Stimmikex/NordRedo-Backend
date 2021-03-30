@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS events (
     location character varying(255) NOT NULL,
     rating INTEGER,
     user_id INTEGER,
+    signup BOOLEAN,
     event_type_id INTEGER,
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (event_type_id) REFERENCES event_types (id) ON DELETE CASCADE
