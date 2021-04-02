@@ -114,4 +114,10 @@ routerEvent.get('/:data?',
     const event = await getEventById(id);
     res.json(event);
   });
+
+routerEvent.get('/eventtypes',
+  async (req, res) => {
+    const event = await getAllEventTypes();
+    res.json(event);
+  });
   
