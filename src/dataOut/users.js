@@ -74,6 +74,31 @@ export async function getAllUsers() {
   }
 }
 
+export async function countActiveUsers() {
+  const q = 'SELECT COUNT(*) FROM Users WHERE active = true;';
+  try {
+    const result = await query(q);
+      return result.rows[0];
+  } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+  }
+}
+
+export async function getGoverment() {
+  const q = `SELECT (goverment_type.title AS title, year, users.username AS username) FROM goverment
+              INNER JOIN users ON users.id = goverment.user_id
+              INNER JOIN goverment_type ON goverment_type.id = goverment.gov_type 
+  `;
+  try {
+    const result = await query(q);
+      return result.rows;
+  } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+  }
+}
+
 export async function comparePasswords(password, hash) {
   const result = await bcrypt.compare(password, hash);
 

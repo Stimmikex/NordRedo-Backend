@@ -80,6 +80,14 @@ CREATE TABLE IF NOT EXISTS government (
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+CREATE TABLE IF NOT EXISTS government_type (
+    id serial primary key,
+    title character varying(255) NOT NULL,
+    year character varying(255) NOT NULL,
+    user_id INTEGER,
+    FOREIGN KEY (user_id) REFERENCES users (id)
+);
+
 CREATE TABLE IF NOT EXISTS ads (
     id serial primary key,
     name character varying(255) NOT NULL,
