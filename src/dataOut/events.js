@@ -1,7 +1,12 @@
 import { query } from './utils.js'
 
 export async function getEventById(id) {
-  const q = 'SELECT * FROM events WHERE id = $1';
+  const q = `SELECT events.id, title, text, seats, date, location, rating, signup, users.username AS user_id, event_types.name AS event_type
+              FROM events
+                INNER JOIN users ON users.id = events.user_id 
+                INNER JOIN event_types ON event_types.id = events.event_type_id
+              WHERE events.id = $1
+            `;
 
   try {
     const result = await query(q, [id]);
