@@ -109,7 +109,7 @@ export async function getAllEventTypes() {
   const q = 'SELECT * FROM event_types';
   try {
     const result = await query(q);
-    return result.rows[0];
+    return result.rows;
   } catch (e) {
     console.error('There is no event with this id');
   }

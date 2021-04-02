@@ -115,7 +115,7 @@ routerEvent.get('/:data?',
     res.json(event);
   });
 
-routerEvent.get('/eventtypes',
+routerEvent.get('/types',
   async (req, res) => {
     const event = await getAllEventTypes();
     res.json(event);
