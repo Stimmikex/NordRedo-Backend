@@ -107,6 +107,12 @@ routerEvent.get('/count/:data?',
     res.json(data);
 });
 
+routerEvent.get('/types',
+  async (req, res) => {
+    const event = await getAllEventTypes();
+    res.json(event);
+  });
+
 routerEvent.get('/:data?',
   paramIdRules(),
   async (req, res) => {
@@ -115,9 +121,4 @@ routerEvent.get('/:data?',
     res.json(event);
   });
 
-routerEvent.get('/types',
-  async (req, res) => {
-    const event = await getAllEventTypes();
-    res.json(event);
-  });
   
