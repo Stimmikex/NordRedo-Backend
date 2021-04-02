@@ -97,6 +97,7 @@ routerUser.post('/login',
 
     if (passwordIsCorrect) {
       const token = createTokenForUser(user.id);
+      res.header('Access-Control-Expose-Headers', token)
       return res.json({
         "user": {
           id: user.id,
