@@ -164,13 +164,13 @@ routerUser.patch('/me', requireAuthentication,
     });
   });
 
-routerEvent.get('/gov',
+  routerUser.get('/gov',
   async (req, res) => {
     const event = await users.getGoverment();
     res.json(event);
   });
 
-routerEvent.get('/active',
+  routerUser.get('/active',
   async (req, res) => {
     const event = await users.countActiveUsers();
     res.json(event);
