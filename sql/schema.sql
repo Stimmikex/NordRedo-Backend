@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
 	date_joined TIMESTAMP NOT NULL,
 	last_login TIMESTAMP NOT NULL,
 	active BOOLEAN NOT NULL,
+    token CHARACTER VARYING(255), 
 	UNIQUE (username),
 	FOREIGN KEY (role_id) REFERENCES roles (id)
 );
@@ -72,19 +73,17 @@ CREATE TABLE IF NOT EXISTS signup (
     FOREIGN KEY (event_id) REFERENCES events (id)
 );
 
-CREATE TABLE IF NOT EXISTS government (
-    id serial primary key,
-    title character varying(255) NOT NULL,
-    year character varying(255) NOT NULL,
-    user_id INTEGER,
-    FOREIGN KEY (user_id) REFERENCES users (id)
-);
-
 CREATE TABLE IF NOT EXISTS government_type (
     id serial primary key,
-    title character varying(255) NOT NULL,
+    title character varying(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS government (
+    id serial primary key,
+    gov_type INTEGER,
     year character varying(255) NOT NULL,
     user_id INTEGER,
+    FOREIGN KEY (gov_type) REFERENCES government_type (id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

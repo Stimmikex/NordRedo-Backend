@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import passport from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
 import jwt from 'jsonwebtoken';
-import { getUserByID } from './users.js';
+import { getUserByID, getUserByToken } from './users.js';
+import CookieStrategy from 'passport-cookie';
 
 export default passport;
 
@@ -34,7 +35,25 @@ async function strat(data, next) {
   }
 }
 
-passport.use(new Strategy(jwtOptions, strat));
+// passport.use(new CookieStrategy({
+//   cookieName: 'auth',
+//   signed: true,
+//   passReqToCallback: true
+// }, function(req, token, done) {
+//     const user = getUserByToken(token);
+//     req.user = user;
+// }))
+passport.use(new CookieStrategy({
+  cookieName: 'auth',
+  signed: true,
+  passReqToCallback: true
+}, function(req, token, done) {
+  User.findByToken({ token: token }, function(err, user) {
+    if (err) { return done(err); }
+    if (!user) { return done(null, false); }
+    return done(null, user);
+  });
+})
 
 export function createTokenForUser(id) {
   const payload = { id };
@@ -45,7 +64,7 @@ export function createTokenForUser(id) {
 
 export function requireAuthentication(req, res, next) {
   return passport.authenticate(
-    'jwt',
+    "cookie",
     { session: false },
     (err, user, info) => {
       if (err) {
@@ -56,6 +75,10 @@ export function requireAuthentication(req, res, next) {
         const error = info.name === 'TokenExpiredError'
           ? 'expired token' : 'invalid token';
         return res.status(401).json({ error });
+      }
+
+      if (user.role_id === 3) {
+        return res.status(401).json({ error: 'User does not have admin priviledges' });
       }
 
       req.user = user;

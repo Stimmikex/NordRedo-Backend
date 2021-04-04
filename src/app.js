@@ -5,6 +5,7 @@ import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
 import { routerAdmin } from './routes/Ugla/uglaUser.js';
 import { getEvents } from './dataOut/events.js'
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -35,6 +36,8 @@ app.use((_req, res, next) => {
   );
   next();
 });
+
+app.use(cookieParser())
 
 app.get('/', async (req, res) => {
   const events = await getEvents();

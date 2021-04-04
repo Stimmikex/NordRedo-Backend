@@ -4,8 +4,11 @@ import express from "express";
 import * as users from "../dataOut/users.js";
 import { body, param, validationResult } from "express-validator";
 import { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
+import cookie from 'cookie';
 
 dotenv.config();
+
+const secret = process.env.SESSION_SECRET;
 
 export const routerUser = express.Router();
 
@@ -48,8 +51,10 @@ routerUser.get('/',
     }
 
     const { username, password } = req.body;
+    
+    const token = createTokenForUser(user.id);
 
-    const createdUser = await users.createUser(username, password);
+    const createdUser = await users.createUser(username, password, token);
 
     console.log(createdUser);
 
@@ -57,7 +62,7 @@ routerUser.get('/',
       return res.json({
         id: createdUser.id, 
         username: createdUser.name,
-        token: createTokenForUser(createdUser.id),
+        token,
       });
     }
 
@@ -97,7 +102,15 @@ routerUser.post('/login',
 
     if (passwordIsCorrect) {
       const token = createTokenForUser(user.id);
-      res.header('Access-Control-Expose-Headers', token)
+      res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
+        httpOnly: true,
+        secure: false,
+        samneSite: 'strict',
+        maxAge: 3600,
+        path: '/'
+      }))
+      console.log(req.cookies)
+      await users.updateUserTokenById(req.cookies.auth, user.id);
       return res.json({
         "user": {
           id: user.id,
@@ -120,10 +133,12 @@ routerUser.post('/login',
 routerUser.get('/me',
   requireAuthentication,
   (req, res) => {
-    res.json({
-      id: req.user.id,
-      username: req.user.username,
-      role_id: req.user.role_id,
+    return res.json({
+      "user": {
+        id: req.user.id,
+        username: req.user.name,
+        role_id: req.user.role_id
+      },
     });
   });
 
