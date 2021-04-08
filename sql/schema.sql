@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS users (
 	date_joined TIMESTAMP NOT NULL,
 	last_login TIMESTAMP NOT NULL,
 	active BOOLEAN NOT NULL,
-    token CHARACTER VARYING(255), 
+    token TEXT, 
 	UNIQUE (username),
 	FOREIGN KEY (role_id) REFERENCES roles (id)
 );

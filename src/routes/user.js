@@ -101,7 +101,7 @@ routerUser.post('/login',
     const passwordIsCorrect = users.comparePasswords(password, user.password);
 
     if (passwordIsCorrect) {
-      const token = createTokenForUser(user.id);
+      const token = createTokenForUser(user);
       res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
         httpOnly: true,
         secure: false,
@@ -109,7 +109,6 @@ routerUser.post('/login',
         maxAge: 3600,
         path: '/'
       }))
-      console.log(req.cookies)
       await users.updateUserTokenById(req.cookies.auth, user.id);
       return res.json({
         "user": {
@@ -136,7 +135,7 @@ routerUser.get('/me',
     return res.json({
       "user": {
         id: req.user.id,
-        username: req.user.name,
+        username: req.user.username,
         role_id: req.user.role_id
       },
     });

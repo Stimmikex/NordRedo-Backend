@@ -25,9 +25,7 @@ const jwtOptions = {
 };
 
 async function strat(data, next) {
-  // fáum id gegnum data sem geymt er í token
-  const user = await getUserByID(data.id);
-
+  const user = findByToken(token);
   if (user) {
     next(null, user);
   } else {
@@ -43,20 +41,30 @@ async function strat(data, next) {
 //     const user = getUserByToken(token);
 //     req.user = user;
 // }))
-passport.use(new CookieStrategy({
-  cookieName: 'auth',
-  signed: true,
-  passReqToCallback: true
-}, function(req, token, done) {
-  User.findByToken({ token: token }, function(err, user) {
-    if (err) { return done(err); }
-    if (!user) { return done(null, false); }
-    return done(null, user);
-  });
-})
+
+function findByToken(token) {
+  return jwt.decode(token, jwtSecret);
+}
+
+// passport.use(new CookieStrategy({
+//   cookieName: 'auth',
+//   signed: true,
+//   passReqToCallback: true
+// }, function(req, token, done) {
+//     token = findByToken(token);
+//     next();
+// }))
+
+const cookieOptions = {
+    cookieName: 'auth',
+    signed: true,
+    passReqToCallback: true
+}
+
+passport.use(new CookieStrategy(cookieOptions, strat))
 
 export function createTokenForUser(id) {
-  const payload = { id };
+  const payload = { user: id };
   const tokenOptions = { expiresIn: tokenLifetime };
   const token = jwt.sign(payload, jwtSecret, tokenOptions);
   return token;
@@ -66,39 +74,32 @@ export function requireAuthentication(req, res, next) {
   return passport.authenticate(
     "cookie",
     { session: false },
-    (err, user, info) => {
+    (err, info) => {
       if (err) {
         return next(err);
       }
-
+      const user = findByToken(req.cookies.auth);
       if (!user) {
-        const error = info.name === 'TokenExpiredError'
-          ? 'expired token' : 'invalid token';
+        const error = 'invalid token';
         return res.status(401).json({ error });
       }
-
-      if (user.role_id === 3) {
-        return res.status(401).json({ error: 'User does not have admin priviledges' });
-      }
-
-      req.user = user;
-      return next();
+      req.user = user.user;
+      return next()
     },
   )(req, res, next);
 }
 
 export function requireAdminAuthentication(req, res, next) {
   return passport.authenticate(
-    'jwt',
+    "cookie",
     { session: false },
-    (err, user, info) => {
+    (err, info) => {
       if (err) {
         return next(err);
       }
-
+      const user = findByToken(req.cookies.auth);
       if (!user) {
-        const error = info.name === 'TokenExpiredError'
-          ? 'expired token' : 'invalid token';
+        const error = 'invalid token';
         return res.status(401).json({ error });
       }
 
@@ -106,8 +107,8 @@ export function requireAdminAuthentication(req, res, next) {
         return res.status(401).json({ error: 'User does not have admin priviledges' });
       }
 
-      req.user = user;
-      return next();
+      req.user = user.user;
+      return next()
     },
   )(req, res, next);
 }
