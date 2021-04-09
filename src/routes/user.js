@@ -113,7 +113,7 @@ routerUser.post('/login',
       return res.json({
         "user": {
           id: user.id,
-          username: user.name,
+          username: user.username,
           role_id: user.role_id
         },
         token,
