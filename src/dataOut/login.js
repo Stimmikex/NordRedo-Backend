@@ -103,7 +103,7 @@ export function requireAdminAuthentication(req, res, next) {
         return res.status(401).json({ error });
       }
 
-      if (user.role_id === 3) {
+      if (user.role_id !== 3) {
         return res.status(401).json({ error: 'User does not have admin priviledges' });
       }
 
