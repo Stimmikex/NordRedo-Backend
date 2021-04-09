@@ -8,14 +8,14 @@ import { getGoverment } from '../dataOut/users.js';
 export let routerAdmin = express.Router();
 
 routerAdmin.get('/ads',
-  requireAdminAuthentication, 
+  // requireAdminAuthentication, 
   async (req, res) => {
     const ads = await getAllAds();
     res.json(ads);
   });
 
   routerAdmin.get('/members',
-  requireAdminAuthentication,
+   // requireAdminAuthentication,
   async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -30,7 +30,7 @@ routerAdmin.get('/ads',
   });
 
   routerAdmin.get('/gov',
-  requireAdminAuthentication,
+  // requireAdminAuthentication,
   async (req, res) => {
     const event = await getGoverment();
     res.json(event);
