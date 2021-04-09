@@ -1,9 +1,9 @@
 import express from 'express';
-import { getAllAds } from '../dataOut/admin.js';
+import { getAllAds, getAllUsers} from '../dataOut/admin.js';
 
 import { validationResult } from "express-validator";
 import { requireAdminAuthentication } from "../dataOut/login.js";
-import { getAllUsers } from '../dataOut/admin.js';
+import { getGoverment } from '../dataOut/users.js';
 
 export let routerAdmin = express.Router();
 
@@ -27,4 +27,11 @@ routerAdmin.get('/ads',
     } catch (error) {
       console.error(error)
     }
+  });
+
+  routerAdmin.get('/gov',
+  requireAdminAuthentication,
+  async (req, res) => {
+    const event = await getGoverment();
+    res.json(event);
   });

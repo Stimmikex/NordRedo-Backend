@@ -10,21 +10,6 @@ dotenv.config();
 
 export const routerUser = express.Router();
 
-routerUser.get('/',
-  requireAdminAuthentication,
-  async (req, res) => {
-    const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array()})
-    }
-    try {
-      const items = await users.getAllUsers();
-      res.json(items);
-    } catch (error) {
-      console.error(error)
-    }
-  });
-
   routerUser.post('/register',
   body('username')
     .trim()
@@ -140,7 +125,8 @@ routerUser.get('/me',
   });
 
 
-routerUser.patch('/me', requireAuthentication,
+routerUser.patch('/me', 
+requireAuthentication,
   body('password')
     .if(body('password').exists())
     .isLength({ min: 10, max: 256 })

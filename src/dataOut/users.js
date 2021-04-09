@@ -75,9 +75,9 @@ export async function countActiveUsers() {
 }
 
 export async function getGoverment() {
-  const q = `SELECT (goverment_type.title AS title, year, users.username AS username) FROM goverment
-              INNER JOIN users ON users.id = goverment.user_id
-              INNER JOIN goverment_type ON goverment_type.id = goverment.gov_type 
+  const q = `SELECT government_type.title AS title, year, users.username AS username FROM government
+              INNER JOIN users ON users.id = government.user_id
+              INNER JOIN government_type ON government_type.id = government.gov_type
   `;
   try {
     const result = await query(q);
