@@ -63,19 +63,6 @@ export async function getUserByID(id) {
   return false;
 }
 
-export async function getAllUsers() {
-  const q = `SELECT (users.id, username, roles.name, date_joined, last_login, active) FROM users
-                INNER JOIN roles ON roles.id = users.role_id
-  `;
-  try {
-    const result = await query(q);
-      return result.rows;
-  } catch (e) {
-    console.error('Error occured :>> ', e);
-    return null;
-  }
-}
-
 export async function countActiveUsers() {
   const q = 'SELECT COUNT(*) FROM Users WHERE active = true;';
   try {
@@ -100,6 +87,7 @@ export async function getGoverment() {
     return null;
   }
 }
+
 export async function updateUserTokenById(token, id) {
   const q = 'UPDATE Users SET token=$1 WHERE id=$2 RETURNING *';
 
