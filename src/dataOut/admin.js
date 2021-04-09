@@ -25,3 +25,16 @@ export async function createAd(name, link) {
       return null;
     }
   }
+
+  export async function getAllUsers() {
+    const q = `SELECT users.id, username, roles.name, date_joined, last_login, active FROM users
+                  INNER JOIN roles ON roles.id = users.role_id
+    `;
+    try {
+      const result = await query(q);
+        return result.rows;
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }

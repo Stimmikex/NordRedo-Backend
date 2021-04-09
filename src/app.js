@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import { routerEvent } from './routes/events.js';
 import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
-import { routerAdmin } from './routes/Ugla/uglaUser.js';
+import { routerAdmin } from './routes/admin.js';
 import { getEvents } from './dataOut/events.js'
 import cookieParser from 'cookie-parser';
 
