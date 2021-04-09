@@ -105,7 +105,7 @@ routerUser.post('/login',
       res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
         httpOnly: false,
         secure: false,
-        samneSite: 'strict',
+        sameSite: 'Lax',
         maxAge: 3600,
         path: '/'
       }))
