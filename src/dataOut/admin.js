@@ -1,0 +1,27 @@
+import { query } from './utils.js';
+
+export async function createAd(name, link) {
+    const q = 'INSERT INTO Users (name, link) VALUES ($1, $2) RETURNING *';
+  
+    try {
+      const result = await query(q, [name, link]);
+      if (result.rowCount === 1){
+        return result.rows[0];
+      }
+    }
+    catch (error) {
+      console.error('Error creating ad', error);
+    }
+    return false;
+  }
+
+  export async function getAllAds() {
+    const q = 'SELECT * FROM ads';
+    try {
+      const result = await query(q);
+        return result.rows;
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }

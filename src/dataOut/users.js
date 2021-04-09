@@ -64,7 +64,9 @@ export async function getUserByID(id) {
 }
 
 export async function getAllUsers() {
-  const q = 'SELECT * FROM Users;';
+  const q = `SELECT (id, username, role_id, date_joined, last_login, active) FROM users
+                INNER JOIN roles ON roles.id = users.role_id
+  `;
   try {
     const result = await query(q);
       return result.rows;

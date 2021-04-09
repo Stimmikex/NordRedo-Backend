@@ -8,8 +8,6 @@ import cookie from 'cookie';
 
 dotenv.config();
 
-const secret = process.env.SESSION_SECRET;
-
 export const routerUser = express.Router();
 
 routerUser.get('/',
