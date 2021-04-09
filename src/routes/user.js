@@ -103,7 +103,7 @@ routerUser.post('/login',
     if (passwordIsCorrect) {
       const token = createTokenForUser(user);
       res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
         samneSite: 'strict',
         maxAge: 3600,
