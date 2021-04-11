@@ -175,16 +175,11 @@ requireAuthentication,
   });
   
 routerUser.get('/:id',
-requireAdminAuthentication,
+// requireAdminAuthentication,
 param('id')
   .isInt()
   .withMessage('id must be integer'),
 async (req, res) => {
-  const errors = validationResult(req);
-  if(!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
   const data = await users.getUserByID(req.params.id);
   if (data) return res.json( data );
   return res.status(404).json({ msg: 'User not found' });

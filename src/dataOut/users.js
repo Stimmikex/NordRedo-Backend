@@ -50,7 +50,7 @@ export async function getUserByUsername(name) {
 }
 
 export async function getUserByID(id) {
-  const q = 'SELECT * FROM Users WHERE id = $1;';
+  const q = 'SELECT id, username, role_id, date_joined, last_login, active FROM Users WHERE id = $1;';
   try {
     const result = await query(q, [id]);
     if(result.rowCount === 1) {
