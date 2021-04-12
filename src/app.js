@@ -29,7 +29,7 @@ app.use((_req, res, next) => {
     'Access-Control-Allow-Origin', '*',
   );
   res.header(
-    'Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE',
+    'Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH',
   );
   res.header(
     'Access-Control-Allow-Headers', 'Content-Type'
