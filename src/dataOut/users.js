@@ -135,6 +135,22 @@ export async function inactiveUserById(id) {
   return null;
 }
 
+export async function updateUserRole(user_id, role_id) {
+  const q = `
+    UPDATE users
+      SET role_id = $2
+    WHERE
+        id = $1
+  `;
+  try {
+    const result = await query(q, [user_id, role_id]);
+    return result.rows[0];
+  } catch (e) {
+    console.error('Could not set user inactive');
+  }
+  return null;
+}
+
 export async function comparePasswords(password, hash) {
   const result = await bcrypt.compare(password, hash);
 

@@ -174,7 +174,18 @@ requireAuthentication,
     res.json(event);
   });
 
+  routerUser.patch('/:userId/:roleId',
+  // requireAdminAuthentication,
+  param('id')
+    .isInt()
+    .withMessage('id must be integer'),
+  async (req, res) => {
+    const event = await users.updateUserRole(req.params.userId, req.params.roleId);
+    res.json(event);
+  });
+
   routerUser.delete('/:id',
+  // requireAdminAuthentication,
   param('id')
     .isInt()
     .withMessage('id must be integer'),
