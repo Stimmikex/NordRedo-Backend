@@ -27,7 +27,7 @@ export async function createAd(name, link) {
   }
 
   export async function getRoles() {
-    const q = 'SELECT * FROM roles WHERE';
+    const q = 'SELECT * FROM roles';
     try {
       const result = await query(q);
       return result.rows;
