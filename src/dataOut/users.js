@@ -121,8 +121,8 @@ export async function getUserByToken(token) {
 
 export async function inactiveUserById(id) {
   const q = `
-    UPDATE user
-      SET active = false,
+    UPDATE users
+      SET active = false
     WHERE
         id = $1 
   `;
