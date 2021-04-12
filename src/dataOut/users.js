@@ -151,6 +151,17 @@ export async function updateUserRole(user_id, role_id) {
   return null;
 }
 
+export async function findUsers(name) {
+  const q = 'SELECT * FROM Users WHERE username LIKE %$1%;';
+  try {
+    const result = await query(q, [name.toString()]);
+    return result.rows;
+  } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+  }
+}
+
 export async function comparePasswords(password, hash) {
   const result = await bcrypt.compare(password, hash);
 

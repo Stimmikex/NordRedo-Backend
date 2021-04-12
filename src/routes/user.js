@@ -194,6 +194,13 @@ requireAuthentication,
     res.json(event);
   });
   
+  routerUser.get('/find/',
+  async (req, res) => {
+    const name = req.query.name
+    const looking = await users.findUsers(name);
+    res.json(looking);
+  });
+
 routerUser.get('/:id',
 // requireAdminAuthentication,
 param('id')
