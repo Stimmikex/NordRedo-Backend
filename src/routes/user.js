@@ -173,6 +173,15 @@ requireAuthentication,
     const event = await users.countActiveUsers();
     res.json(event);
   });
+
+  routerUser.delete('/:id',
+  param('id')
+    .isInt()
+    .withMessage('id must be integer'),
+  async (req, res) => {
+    const event = await users.inactiveUserById(req.params.id);
+    res.json(event);
+  });
   
 routerUser.get('/:id',
 // requireAdminAuthentication,

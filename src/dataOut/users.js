@@ -119,6 +119,22 @@ export async function getUserByToken(token) {
   return false;
 }
 
+export async function inactiveUserById(id) {
+  const q = `
+    UPDATE user
+      SET active = false,
+    WHERE
+        id = $1 
+  `;
+  try {
+    const result = await query(q, [id]);
+    return result.rows[0];
+  } catch (e) {
+    console.error('Could not set user inactive');
+  }
+  return null;
+}
+
 export async function comparePasswords(password, hash) {
   const result = await bcrypt.compare(password, hash);
 

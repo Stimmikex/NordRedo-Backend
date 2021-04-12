@@ -19,7 +19,18 @@ export async function createAd(name, link) {
     const q = 'SELECT * FROM ads';
     try {
       const result = await query(q);
-        return result.rows;
+      return result.rows;
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }
+
+  export async function getRoles() {
+    const q = 'SELECT * FROM roles WHERE';
+    try {
+      const result = await query(q);
+      return result.rows;
     } catch (e) {
       console.error('Error occured :>> ', e);
       return null;

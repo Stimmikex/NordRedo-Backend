@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllAds, getAllUsers} from '../dataOut/admin.js';
+import { getAllAds, getAllUsers, getRoles } from '../dataOut/admin.js';
 
 import { validationResult } from "express-validator";
 import { requireAdminAuthentication } from "../dataOut/login.js";
@@ -27,6 +27,13 @@ routerAdmin.get('/ads',
     } catch (error) {
       console.error(error)
     }
+  });
+
+  routerAdmin.get('/roles',
+  // requireAdminAuthentication, 
+  async (req, res) => {
+    const roles = await getRoles();
+    res.json(roles);
   });
 
   routerAdmin.get('/gov',
