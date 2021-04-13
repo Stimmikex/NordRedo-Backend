@@ -152,9 +152,10 @@ export async function updateUserRole(user_id, role_id) {
 }
 
 export async function findUsers(name) {
-  const q = 'SELECT * FROM Users WHERE username LIKE %$1%;';
+  console.log(name);
+  const q = `SELECT id, username, role_id, date_joined, last_login, active FROM Users WHERE username LIKE '%' || $1 || '%'`;
   try {
-    const result = await query(q, [name.toString()]);
+    const result = await query(q, [name]);
     return result.rows;
   } catch (e) {
     console.error('Error occured :>> ', e);
