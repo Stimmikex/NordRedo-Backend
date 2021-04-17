@@ -196,9 +196,17 @@ requireAuthentication,
   
   routerUser.get('/find/',
   async (req, res) => {
-    const name = req.query.name
-    const looking = await users.findUsers(name);
-    res.json(looking);
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()})
+    }
+    try {
+      const name = req.query.name
+      const looking = await users.findUsers(name);
+      res.json(looking);
+    } catch (error) {
+      console.error(error)
+    }
   });
 
 routerUser.get('/:id',
