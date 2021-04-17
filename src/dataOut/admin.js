@@ -51,7 +51,7 @@ export async function createAd(name, link) {
   }
 
   export async function updateGovRoleByUserId(userId, govId) {
-    const q = 'UPDATE government SET user_id=$1 WHERE id=$3 RETURNING *';
+    const q = 'UPDATE government SET user_id=$1 WHERE id=$3';
     try {
       const result = await query(q, [userId, govId]);
         return result.rows;

@@ -152,8 +152,11 @@ export async function updateUserRole(user_id, role_id) {
 }
 
 export async function findUsers(name) {
-  console.log(name);
-  const q = `SELECT id, username, role_id, date_joined, last_login, active FROM Users WHERE username LIKE '%' || $1 || '%'`;
+  const q = SELECT `SELECT users.id, username, roles.name, date_joined, last_login, active 
+                        FROM users
+                        INNER JOIN roles ON roles.id = users.role_id 
+                        WHERE username LIKE '%' || $1 || '%'
+  `;
   try {
     const result = await query(q, [name]);
     return result.rows;
