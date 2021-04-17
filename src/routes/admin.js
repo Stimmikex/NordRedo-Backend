@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllAds, getAllUsers, getRoles } from '../dataOut/admin.js';
+import { getAllAds, getAllUsers, getRoles, updateGovRoleByUserId} from '../dataOut/admin.js';
 
 import { validationResult } from "express-validator";
 import { requireAdminAuthentication } from "../dataOut/login.js";
@@ -40,5 +40,14 @@ routerAdmin.get('/ads',
   // requireAdminAuthentication,
   async (req, res) => {
     const event = await getGoverment();
+    res.json(event);
+  });
+
+  routerAdmin.patch('/gov/change/:userId/:govId',
+  // requireAdminAuthentication,
+  async (req, res) => {
+    const userID = req.params.userId;
+    const govID = req.params.govId;
+    const event = await updateGovRoleByUserId(userID, govID);
     res.json(event);
   });

@@ -49,3 +49,14 @@ export async function createAd(name, link) {
       return null;
     }
   }
+
+  export async function updateGovRoleByUserId(userId, govId) {
+    const q = 'UPDATE government SET user_id=$1 WHERE id=$3 RETURNING *';
+    try {
+      const result = await query(q, [userId, govId]);
+        return result.rows;
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }
