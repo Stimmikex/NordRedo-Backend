@@ -87,6 +87,7 @@ routerUser.post('/login',
       const token = createTokenForUser(user);
       res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
         httpOnly: false,
+        domain: 'localhost:8000',
         secure: false,
         sameSite: 'Lax',
         maxAge: 3600,
