@@ -113,7 +113,7 @@ routerUser.post('/login',
 });
 
 routerUser.get('/me',
-  requireAuthentication,
+  // requireAuthentication,
   (req, res) => {
     return res.json({
       "user": {
