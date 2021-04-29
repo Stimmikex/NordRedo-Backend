@@ -24,10 +24,12 @@ export const eventRules = () => [
     .withMessage('date must be a date'),
   body('startDate')
     .isDate()
-    .withMessage('startDate must be a date'),
+    .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}):(\d{2}))?')
+    .withMessage('not dateTime format'),
   body('endDate')
     .isDate()
-    .withMessage('endDate must be a date'),
+    .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}):(\d{2}))?')
+    .withMessage('not dateTime format'),
   body('location')
     .isString(),
   body('event_type_id')
