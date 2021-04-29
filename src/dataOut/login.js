@@ -97,7 +97,7 @@ export function requireAdminAuthentication(req, res, next) {
       if (err) {
         return next(err);
       }
-      const user = findByToken(req.cookies.auth).user;
+      const user = findByToken(req.cookies.auth);
       if (!user) {
         const error = 'invalid token';
         return res.status(401).json({ error });
