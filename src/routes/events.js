@@ -81,7 +81,7 @@ routerEvent.delete('/delete/:data?', requireAdminAuthentication,
     res.json({msg: event + ' Has been deleted'});
   });
 
-routerEvent.post('/add', requireAdminAuthentication,
+routerEvent.post('/add', requireAuthentication,
   eventRules(),
   checkValidationResult,
   async (req, res) => {
