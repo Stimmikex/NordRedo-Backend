@@ -16,7 +16,7 @@ import {
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
 
-import { requireAdminAuthentication } from '../dataOut/login.js'
+import { requireAuthentication, requireAdminAuthentication } from '../dataOut/login.js'
 
 export let routerEvent = express.Router();
 
