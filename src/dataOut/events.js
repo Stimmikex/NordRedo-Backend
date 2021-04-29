@@ -29,7 +29,7 @@ export async function createEvent(data) {
     RETURNING *
   `;
   try {
-    const result = await query(q, [data.title, data.text, data.seats, data.date, data.startDate, data.endDate, data.location, data.event_type_id, data.user, data.signup]);
+    const result = await query(q, [data.title, data.text, data.seats, data.date, data.startDate, data.endDate, data.location, data.event_type_id, data.user, Boolean(data.signup)]);
     return result.rows[0];
   } catch (e) {
     return { error: 'Could not make event'};
