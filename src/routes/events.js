@@ -92,7 +92,7 @@ routerEvent.post('/add',
     console.log(data)
     const user = req.user;
     console.log(user)
-    const event = await createEvent(data, user.id);
+    const event = await createEvent(data);
     res.json({msg: event.title + ' Has been added'});
   });
 
