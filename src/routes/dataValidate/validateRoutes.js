@@ -23,10 +23,10 @@ export const eventRules = () => [
     .isDate()
     .withMessage('date must be a date'),
   body('startDate')
-    .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}))?')
+    .matches('/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]/')
     .withMessage('not dateTime format'),
   body('endDate')
-    .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}))?')
+    .matches('/[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1]) (2[0-3]|[01][0-9]):[0-5][0-9]/')
     .withMessage('not dateTime format'),
   body('location')
     .isString(),
