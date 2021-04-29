@@ -16,7 +16,7 @@ import {
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
 
-import { requireAuthentication, requireAdminAuthentication } from '../dataOut/login.js'
+import { requireAdminAuthentication } from '../dataOut/login.js'
 
 export let routerEvent = express.Router();
 
@@ -81,7 +81,7 @@ routerEvent.delete('/delete/:data?', requireAdminAuthentication,
     res.json({msg: event + ' Has been deleted'});
   });
 
-routerEvent.post('/add', requireAuthentication,
+routerEvent.post('/add', requireAdminAuthentication,
   eventRules(),
   checkValidationResult,
   async (req, res) => {
