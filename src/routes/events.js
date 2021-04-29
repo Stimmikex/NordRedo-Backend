@@ -16,7 +16,7 @@ import {
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
 
-import { requireAdminAuthentication } from '../dataOut/login.js'
+import { requireAdminAuthentication, requireAuthentication } from '../dataOut/login.js'
 
 export let routerEvent = express.Router();
 
@@ -39,7 +39,8 @@ routerEvent.get('/registered/:data?', async (req, res) => {
    res.json(registered);
  });
 
-routerEvent.post('/sign-in/:data?', requireAdminAuthentication,
+routerEvent.post('/sign-in/:data?',
+  requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
     const user = req.user;
@@ -49,7 +50,8 @@ routerEvent.post('/sign-in/:data?', requireAdminAuthentication,
     res.json({msg: 'User signed up'});
   });
 
-routerEvent.post('/sign-out/:data?/', requireAdminAuthentication,
+routerEvent.post('/sign-out/:data?',
+  requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
     const user = req.user;
@@ -82,12 +84,14 @@ routerEvent.delete('/delete/:data?', requireAdminAuthentication,
   });
 
 routerEvent.post('/add', 
-  // requireAdminAuthentication,
+  requireAuthentication,
   eventRules(),
   checkValidationResult,
   async (req, res) => {
     const data = req.body;
+    console.log(data)
     const user = req.user;
+    console.log(user)
     const event = await createEvent(data, user.id);
     res.json({msg: event.title + ' Has been added'});
   });

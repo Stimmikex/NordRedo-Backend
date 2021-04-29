@@ -30,10 +30,6 @@ export const eventRules = () => [
     .withMessage('endDate must be a date'),
   body('location')
     .isString(),
-  body('user_id')
-    .isInt()
-    .custom((value) => value > 0)
-    .withMessage('must be an integer larger than 0'),
   body('event_type_id')
     .isInt()
     .custom((value) => value > 0)
