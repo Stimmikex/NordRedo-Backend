@@ -23,11 +23,9 @@ export const eventRules = () => [
     .isDate()
     .withMessage('date must be a date'),
   body('startDate')
-    .isDate()
     .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}):(\d{2}))?')
     .withMessage('not dateTime format'),
   body('endDate')
-    .isDate()
     .matches('(\d{4})-(\d{2})-(\d{2})( (\d{2}):(\d{2}):(\d{2}))?')
     .withMessage('not dateTime format'),
   body('location')
