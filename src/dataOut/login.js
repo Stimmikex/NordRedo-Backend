@@ -90,26 +90,26 @@ export function requireAuthentication(req, res, next) {
 }
 
 export function requireAdminAuthentication(req, res, next) {
-  return passport.authenticate(
-    "cookie",
-    { session: false },
-    (err, info) => {
-      if (err) {
-        return next(err);
-      }
-      const user = findByToken(req.cookies.auth);
-      console.log(user)
-      if (!user) {
-        const error = 'invalid token';
-        return res.status(401).json({ error });
-      }
+  // return passport.authenticate(
+  //   "cookie",
+  //   { session: false },
+  //   (err, info) => {
+  //     if (err) {
+  //       return next(err);
+  //     }
+  //     const user = findByToken(req.cookies.auth);
+  //     console.log(user)
+  //     if (!user) {
+  //       const error = 'invalid token';
+  //       return res.status(401).json({ error });
+  //     }
 
-      if (user.role_id !== 3) {
-        return res.status(401).json({ error: 'User does not have admin priviledges' });
-      }
+  //     if (user.role_id !== 3) {
+  //       return res.status(401).json({ error: 'User does not have admin priviledges' });
+  //     }
 
-      req.user =  user.user;
-      return next()
-    },
-  )(req, res, next);
+  //     req.user =  user.user;
+  //     return next()
+  //   },
+  // )(req, res, next);
 }
