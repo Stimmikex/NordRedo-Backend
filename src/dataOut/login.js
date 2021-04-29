@@ -107,7 +107,7 @@ export function requireAdminAuthentication(req, res, next) {
         return res.status(401).json({ error: 'User does not have admin priviledges' });
       }
 
-      req.user = user;
+      req.user = user.user;
       return next()
     },
   )(req, res, next);
