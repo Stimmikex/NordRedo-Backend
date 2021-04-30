@@ -40,28 +40,33 @@ routerEvent.get('/registered/:data?', async (req, res) => {
  });
 
 routerEvent.post('/sign-in/:data?',
-  requireAdminAuthentication,
+  // requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
-    const user = req.user;
+    // const user = req.user;
+    const user = req.body.user_id;
     const id = req.params.data;
     const event = await getEventById(id);
-    await signUp(null, user.id, event.id);
+    // await signUp(null, user.id, event.id);
+    await signUp(null, user, event.id);
     res.json({msg: 'User signed up'});
   });
 
 routerEvent.post('/sign-out/:data?',
-  requireAdminAuthentication,
+  // requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
-    const user = req.user;
+    //const user = req.user;
+    const user = req.body.user_id;
     const id = req.params.data;
     const event = await getEventById(id);
-    await signOut(user.id, event.id);
+    // await signOut(user.id, event.id);
+    await signOut(user, event.id);
     res.json({msg: 'User signed out'});
   });
 
-routerEvent.patch('/update/:data?', requireAdminAuthentication,
+routerEvent.patch('/update/:data?',
+  // requireAdminAuthentication,
   patchEventRules(),
   paramIdRules(),
   checkValidationResult,
@@ -73,7 +78,8 @@ routerEvent.patch('/update/:data?', requireAdminAuthentication,
     res.json({msg: data + 'has been updated'});
   });
 
-routerEvent.delete('/delete/:data?', requireAdminAuthentication,
+routerEvent.delete('/delete/:data?',
+  // requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
     const id = req.params.data;
