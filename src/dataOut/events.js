@@ -149,11 +149,25 @@ export async function getEvents() {
 }
 
 export async function deleteEvent(user, event) {
+  deleteSignedByEvent(event)
   const q = `
     DELETE FROM events WHERE user_id = $1 AND id = $2;
   `;
   try {
     const result = await query(q, [user, event]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no event with this id');
+  }
+  return null;
+}
+
+export async function deleteSignedByEvent(event) {
+  const q = `
+    DELETE FROM signup WHERE event_id = $1;
+  `;
+  try {
+    const result = await query(q, [event]);
     return result.rows;
   } catch (e) {
     console.error('There is no event with this id');

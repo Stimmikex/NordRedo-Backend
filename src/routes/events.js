@@ -84,9 +84,11 @@ routerEvent.delete('/delete/:data?',
   paramIdRules(),
   async (req, res) => {
     const id = req.params.data;
-    const user = req.user;
+    // const user = req.user;
+    const user = req.body.user;
+    console.log(user)
     const event = await getEventById(id);
-    await deleteEvent(user.id, event.id);
+    await deleteEvent(user, event.id);
     res.json({msg: event + '  has been deleted'});
   });
 

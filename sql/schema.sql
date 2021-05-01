@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS signup (
     event_id INTEGER,
     FOREIGN KEY (signup_status_id) REFERENCES signup_status (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (event_id) REFERENCES events (id)
+    FOREIGN KEY (event_id) REFERENCES events (id),
 );
 
 CREATE TABLE IF NOT EXISTS government_type (
