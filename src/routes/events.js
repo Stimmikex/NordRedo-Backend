@@ -68,14 +68,15 @@ routerEvent.post('/sign-out/:data?',
 routerEvent.patch('/update/:data?',
   // requireAdminAuthentication,
   patchEventRules(),
-  paramIdRules(),
+  // paramIdRules(),
   checkValidationResult,
   async (req, res) => {
-    const user = req.user;
+    // const user = req.user;
+    const user = req.body.user;
     const id = req.params.data;
     const data = req.body;
     await updateEvent(data, user, id);
-    res.json({msg: data + 'has been updated'});
+    res.json({msg: data.title + ' has been updated'});
   });
 
 routerEvent.delete('/delete/:data?',
@@ -86,7 +87,7 @@ routerEvent.delete('/delete/:data?',
     const user = req.user;
     const event = await getEventById(id);
     await deleteEvent(user.id, event.id);
-    res.json({msg: event + ' Has been deleted'});
+    res.json({msg: event + '  has been deleted'});
   });
 
 routerEvent.post('/add', 
@@ -99,7 +100,7 @@ routerEvent.post('/add',
     const user = req.user;
     console.log(user)
     const event = await createEvent(data);
-    res.json({msg: event.title + ' Has been added'});
+    res.json({msg: event.title + ' has been added'});
   });
 
 routerEvent.get('/list/:data?',

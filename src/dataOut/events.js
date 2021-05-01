@@ -180,10 +180,10 @@ export async function updateEvent(data, user_id, id) {
         id = $10   
   `;
   try {
-    const result = await query(q, [data.title, data.text, data.seats, data. date, data.startDate, data.endDate, data.location, user_id, data.type, id]);
+    const result = await query(q, [data.title, data.text, data.seats, data. date, data.startDate, data.endDate, data.location, user_id, data.event_type_id, id]);
     return result.rows[0];
   } catch (e) {
-    console.error('There is no event with this id');
+    console.error('Event failed to update');
   }
   return null;
 }
