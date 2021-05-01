@@ -149,7 +149,7 @@ export async function getEvents() {
 }
 
 export async function deleteEvent(user, event) {
-  deleteSignedByEvent(event)
+  await deleteSignedByEvent(event)
   const q = `
     DELETE FROM events WHERE user_id = $1 AND id = $2;
   `;
