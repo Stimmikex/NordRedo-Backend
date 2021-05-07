@@ -15,13 +15,6 @@ CREATE TABLE IF NOT EXISTS roles (
     name character varying(255) NOT NULL
 );
 
--- CREATE TABLE IF NOT EXISTS users (
---     id serial primary key,
---     username character varying(255) NOT NULL,
---     password character varying(255) NOT NULL,
---     role_id INTEGER,
---     FOREIGN KEY (role_id) REFERENCES roles (id)
--- );
 
 CREATE TABLE IF NOT EXISTS users (
 	id SERIAL PRIMARY KEY NOT NULL,
