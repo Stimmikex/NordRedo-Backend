@@ -8,6 +8,8 @@ import { getEvents } from './dataOut/events.js'
 import cookieParser from 'cookie-parser';
 import { body, validationResult } from "express-validator";
 import { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "./dataOut/login.js";
+import * as users from "./dataOut/users.js";
+import cookie from 'cookie';
 import cors from 'cors'
 
 dotenv.config();
