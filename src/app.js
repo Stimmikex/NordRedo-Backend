@@ -28,7 +28,7 @@ app.use(express.json());
 
 app.use((_req, res, next) => {
   res.header(
-    "Access-Control-Allow-Origin", "*", 
+    'Access-Control-Allow-Origin', 'https://nordredo-backend.herokuapp.com/',
   );
   res.header(
     'Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH',
