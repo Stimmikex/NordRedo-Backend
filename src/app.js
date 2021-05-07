@@ -8,6 +8,7 @@ import { getEvents } from './dataOut/events.js'
 import cookieParser from 'cookie-parser';
 import { body, validationResult } from "express-validator";
 import { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "./dataOut/login.js";
+import cors from 'cors'
 
 dotenv.config();
 
@@ -25,6 +26,8 @@ if (!databaseUrl) {
 app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
+
+app.use(cors())
 
 app.use((_req, res, next) => {
   res.header(
