@@ -27,17 +27,17 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use(express.json());
 
-app.use(cors())
+// app.use(cors())
 
 app.use((_req, res, next) => {
   res.header(
-    'Access-Control-Allow-Origin', '*',
+    'Access-Control-Allow-Origin', 'https://nordredo-backend.herokuapp.com/',
   );
   res.header(
     'Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH',
   );
   res.header(
-    'Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+    'Access-Control-Allow-Headers', 'Content-Type, Authorization',
   );
   res.header(
     'Access-Control-Allow-Credentials', 'true',
