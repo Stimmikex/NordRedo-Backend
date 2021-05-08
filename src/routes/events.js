@@ -40,7 +40,7 @@ routerEvent.get('/registered/:data?', async (req, res) => {
  });
 
 routerEvent.post('/sign-in/:data?',
-  // requireAdminAuthentication,
+requireAuthentication,
   paramIdRules(),
   async (req, res) => {
     // const user = req.user;
@@ -53,7 +53,7 @@ routerEvent.post('/sign-in/:data?',
   });
 
 routerEvent.post('/sign-out/:data?',
-  // requireAdminAuthentication,
+requireAuthentication,
   paramIdRules(),
   async (req, res) => {
     //const user = req.user;
@@ -66,7 +66,7 @@ routerEvent.post('/sign-out/:data?',
   });
 
 routerEvent.patch('/update/:data?',
-  // requireAdminAuthentication,
+  requireAdminAuthentication,
   patchEventRules(),
   // paramIdRules(),
   checkValidationResult,
@@ -80,7 +80,7 @@ routerEvent.patch('/update/:data?',
   });
 
 routerEvent.delete('/delete/:data?',
-  // requireAdminAuthentication,
+  requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
     const id = req.params.data;

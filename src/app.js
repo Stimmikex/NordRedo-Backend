@@ -18,6 +18,7 @@ const app = express();
 
 const {
   FRONTEND_URL: frontUrl,
+  DATABASE_URL: databaseUrl,
 } = process.env;
 
 if (!databaseUrl) {
