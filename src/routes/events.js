@@ -92,7 +92,7 @@ routerEvent.delete('/delete/:data?',
   });
 
 routerEvent.post('/add', 
-  // requireAdminAuthentication,
+  requireAdminAuthentication,
   eventRules(),
   checkValidationResult,
   async (req, res) => {

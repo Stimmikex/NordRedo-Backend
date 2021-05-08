@@ -17,7 +17,7 @@ dotenv.config();
 const app = express();
 
 const {
-  DATABASE_URL: databaseUrl,
+  FRONTEND_URL: frontUrl,
 } = process.env;
 
 if (!databaseUrl) {
@@ -33,7 +33,7 @@ app.use(express.json());
 
 app.use((_req, res, next) => {
   res.header(
-    'Access-Control-Allow-Origin', '*',
+    'Access-Control-Allow-Origin', `${frontUrl}`,
   );
   res.header(
     'Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH',
