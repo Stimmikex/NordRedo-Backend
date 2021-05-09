@@ -39,8 +39,8 @@ routerAdmin.get('/ads',
   routerAdmin.get('/gov',
   requireAdminAuthentication,
   async (req, res) => {
-    const event = await getGoverment();
-    res.json(event);
+    const gov = await getGoverment();
+    res.json(gov);
   });
 
   routerAdmin.patch('/gov/change/:userId/:govId',
@@ -48,6 +48,6 @@ routerAdmin.get('/ads',
   async (req, res) => {
     const userID = req.params.userId;
     const govID = req.params.govId;
-    const event = await updateGovRoleByUserId(userID, govID);
+    await updateGovRoleByUserId(userID, govID);
     res.json({msg: "User has been role updated"});
   });
