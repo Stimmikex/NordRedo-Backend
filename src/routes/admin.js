@@ -49,5 +49,5 @@ routerAdmin.get('/ads',
     const userID = req.params.userId;
     const govID = req.params.govId;
     const event = await updateGovRoleByUserId(userID, govID);
-    res.json(event);
+    res.json({msg: "User has been role updated"});
   });
