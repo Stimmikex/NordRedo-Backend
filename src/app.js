@@ -132,8 +132,8 @@ app.post('/users/login',
       const token = createTokenForUser(user);
       res.setHeader('Set-Cookie', cookie.serialize('auth', token, {
         httpOnly: false,
-        secure: false,
-        sameSite: 'lax',
+        secure: true,
+        sameSite: 'none',
         maxAge: 3600,
         path: '/'
       }))
