@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from "express";
 import * as users from "../dataOut/users.js";
 import { body, param, validationResult } from "express-validator";
-import { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
+import { requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
 
 dotenv.config();
 
@@ -59,17 +59,17 @@ requireAuthentication,
   });
 
   routerUser.patch('/:userId/:roleId',
-  // requireAdminAuthentication,
+  requireAdminAuthentication,
   param('id')
     .isInt()
     .withMessage('id must be integer'),
   async (req, res) => {
-    const event = await users.updateUserRole(req.params.userId, req.params.roleId);
-    res.json(event);
+    await users.updateUserRole(req.params.userId, req.params.roleId);
+    res.json({msg: "User has been role updated"});
   });
 
   routerUser.delete('/:id',
-  // requireAdminAuthentication,
+  requireAdminAuthentication,
   param('id')
     .isInt()
     .withMessage('id must be integer'),
@@ -94,7 +94,7 @@ requireAuthentication,
   });
 
 routerUser.get('/:id',
-// requireAdminAuthentication,
+requireAdminAuthentication,
 param('id')
   .isInt()
   .withMessage('id must be integer'),
