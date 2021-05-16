@@ -170,7 +170,7 @@ export async function findUsers(name) {
 export async function getProfileByUsername(username) {
   const q = 'SELECT * FROM profile WHERE username = $1;';
   try {
-    const result = await query(q, [username]);
+    const result = await query(q, [username.toString()]);
     if(result.rowCount === 1) {
       return result.rows[0];
     }
