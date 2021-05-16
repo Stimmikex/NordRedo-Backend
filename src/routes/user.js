@@ -114,10 +114,10 @@ routerUser.post('/login',
 
 routerUser.get('/me',
   requireAuthentication,
-  (req, res) => {
-    const user = req.user
-    const profile = await users.getProfileByUsername(user.username)
-    console.log(profile)
+  async (req, res) => {
+    const user = req.user;
+    const profile = await users.getProfileByUsername(user.username);
+    console.log(profile);
     return res.json({
       id: user.id,
       username: user.username,
