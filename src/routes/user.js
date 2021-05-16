@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from "express";
 import * as users from "../dataOut/users.js";
 import { body, param, validationResult } from "express-validator";
-import { requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
+import { createTokenForUser, requireAuthentication, requireAdminAuthentication } from "../dataOut/login.js";
 
 dotenv.config();
 
