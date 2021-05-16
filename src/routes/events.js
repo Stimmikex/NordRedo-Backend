@@ -27,45 +27,44 @@ routerEvent.get('/', async (req, res) => {
   const events = await getEvents();
   res.json(events);
 });
-  
 
 /**
  * Return event by id
  */
-routerEvent.get('/registered/:data?', async (req, res) => {
-   const id = req.params.data;
+routerEvent.get('/registered/:eventId', async (req, res) => {
+   const id = req.params.eventId;
    const event = await getEventById(id);
    const registered = await getSignupByEventId(event.id);
    res.json(registered);
  });
 
-routerEvent.post('/sign-in/:data?',
+routerEvent.post('/sign-in/:eventId',
 requireAuthentication,
   paramIdRules(),
   async (req, res) => {
     // const user = req.user;
     const user = req.body.user_id;
-    const id = req.params.data;
+    const id = req.params.eventId;
     const event = await getEventById(id);
     // await signUp(null, user.id, event.id);
     await signUp(null, user, event.id);
     res.json({msg: 'User signed up'});
   });
 
-routerEvent.post('/sign-out/:data?',
+routerEvent.post('/sign-out/:eventId',
 requireAuthentication,
   paramIdRules(),
   async (req, res) => {
     //const user = req.user;
     const user = req.body.user_id;
-    const id = req.params.data;
+    const id = req.params.eventId;
     const event = await getEventById(id);
     // await signOut(user.id, event.id);
     await signOut(user, event.id);
     res.json({msg: 'User signed out'});
   });
 
-routerEvent.patch('/update/:data?',
+routerEvent.patch('/update/:eventId',
   requireAdminAuthentication,
   patchEventRules(),
   // paramIdRules(),
@@ -73,17 +72,17 @@ routerEvent.patch('/update/:data?',
   async (req, res) => {
     // const user = req.user;
     const user = req.body.user;
-    const id = req.params.data;
+    const id = req.params.eventId;
     const data = req.body;
     await updateEvent(data, user, id);
     res.json({msg: data.title + ' has been updated'});
   });
 
-routerEvent.delete('/delete/:data?',
+routerEvent.delete('/delete/:eventId',
   requireAdminAuthentication,
   paramIdRules(),
   async (req, res) => {
-    const id = req.params.data;
+    const id = req.params.eventId;
     // const user = req.user;
     const user = req.body.user;
     const event = await getEventById(id);
@@ -104,18 +103,18 @@ routerEvent.post('/add',
     res.json({msg: event.title + ' has been added'});
   });
 
-routerEvent.get('/list/:data?',
+routerEvent.get('/list/:eventId',
   paramIdRules(),
   async (req, res) => {
-    const id = req.params.data;
+    const id = req.params.eventId;
     const data = await getSignupByEventId(id);
     res.json(data);
 });
 
-routerEvent.get('/count/:data?',
+routerEvent.get('/count/:eventId',
   paramIdRules(),
   async (req, res) => {
-    const id = req.params.data;
+    const id = req.params.eventId;
     const data = await countRegistered(id);
     res.json(data);
 });
@@ -126,10 +125,10 @@ routerEvent.get('/types',
     res.json(event);
   });
 
-routerEvent.get('/:data?',
+routerEvent.get('/:eventId',
   paramIdRules(),
   async (req, res) => {
-    const id = req.params.data;
+    const id = req.params.eventId;
     const event = await getEventById(id);
     res.json(event);
   });
