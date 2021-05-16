@@ -116,7 +116,7 @@ routerUser.get('/me',
   requireAuthentication,
   (req, res) => {
     const user = req.user
-    const profile = users.getProfileByUsername(user.username)
+    const profile = await users.getProfileByUsername(user.username)
     console.log(profile)
     return res.json({
       id: user.id,
