@@ -55,12 +55,10 @@ routerEvent.post('/sign-out/:eventId',
 requireAuthentication,
   paramIdRules(),
   async (req, res) => {
-    //const user = req.user;
-    const user = req.body.user_id;
+    const user = req.user;
     const id = req.params.eventId;
     const event = await getEventById(id);
-    // await signOut(user.id, event.id);
-    await signOut(user, event.id);
+    await signOut(user.id, event.id);
     res.json({msg: 'User signed out'});
   });
 
@@ -70,8 +68,7 @@ routerEvent.patch('/update/:eventId',
   // paramIdRules(),
   checkValidationResult,
   async (req, res) => {
-    // const user = req.user;
-    const user = req.body.user;
+    const user = req.user;
     const id = req.params.eventId;
     const data = req.body;
     await updateEvent(data, user, id);
@@ -83,8 +80,7 @@ routerEvent.delete('/delete/:eventId',
   paramIdRules(),
   async (req, res) => {
     const id = req.params.eventId;
-    // const user = req.user;
-    const user = req.body.user;
+    const user = req.user;
     const event = await getEventById(id);
     await deleteEvent(user, event.id);
     res.json({msg: event.title + '  has been deleted'});
