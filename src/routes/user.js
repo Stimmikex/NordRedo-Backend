@@ -116,7 +116,9 @@ routerUser.get('/me',
   (req, res) => {
     const user = req.user 
     return res.json({
-      user,
+      id: user.id,
+      username: user.username,
+      role_id: user.role_id
   });
 });
 
