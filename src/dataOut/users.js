@@ -167,6 +167,20 @@ export async function findUsers(name) {
   }
 }
 
+export async function getProfileByUsername(username) {
+  const q = 'SELECT * FROM profile WHERE username = $1;';
+  try {
+    const result = await query(q, [username]);
+    if(result.rowCount === 1) {
+      return result.rows[0];
+    }
+  } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+  }
+  return false;
+}
+
 export async function comparePasswords(password, hash) {
   const result = await bcrypt.compare(password, hash);
 
