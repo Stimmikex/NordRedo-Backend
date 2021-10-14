@@ -130,7 +130,7 @@ routerEvent.get('/:eventId',
     res.json(event);
   });
 
-  routerEvent.get('/search/',
+  routerEvent.get('/search',
   async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
@@ -138,10 +138,9 @@ routerEvent.get('/:eventId',
     }
     try {
       const name = req.query.name
-      const active = req.query.active
       const postdate = req.query.postdate
       const type = req.query.type
-      const looking = await findEvent(name, active, postdate, type);
+      const looking = await findEvent(name, postdate, type);
       res.json(looking);
     } catch (error) {
       console.error(error)
