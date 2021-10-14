@@ -130,7 +130,7 @@ routerEvent.get('/:eventId',
     res.json(event);
   });
 
-  routerEvent.get('/search',
+  routerEvent.get('/search/',
   async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
