@@ -159,7 +159,7 @@ export async function findEvent(name, postdate, type) {
               FROM events 
             INNER JOIN users ON users.id = events.user_id 
             INNER JOIN event_types ON event_types.id = events.event_type_id
-              WHERE name LIKE '%' || $1 || '%' AND event_type = $3 ORDER BY date $2
+              WHERE title LIKE '%' || $1 || '%' AND event_type.name = $3 ORDER BY date $2
             `;
   try {
     const result = await query(q, [name, orderDate, type]);
