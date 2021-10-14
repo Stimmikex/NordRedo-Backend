@@ -148,6 +148,28 @@ export async function getEvents() {
   return null;
 }
 
+export async function findEvent(name, postdate, type) {
+  let orderDate;
+  if (postdate === "Newest") {
+    orderDate = "ASC";
+  } else {
+    orderDate = "DESC";
+  }
+  const q = `SELECT events.id, title, text, seats, date, location, rating, signup, users.username AS user_id, event_types.name AS event_type
+              FROM events 
+            INNER JOIN users ON users.id = events.user_id 
+            INNER JOIN event_types ON event_types.id = events.event_type_id
+              WHERE name LIKE '%' || $1 || '%' AND event_type = $3 ORDER BY date $2
+            `;
+  try {
+    const result = await query(q, [name, orderDate, type]);
+    return result.rows;
+  } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+  }
+}
+
 export async function deleteEvent(user, event) {
   await deleteSignedByEvent(event)
   const q = `

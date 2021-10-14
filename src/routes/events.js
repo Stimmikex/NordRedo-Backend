@@ -12,6 +12,7 @@ import {
   ifRegister,
   deleteEvent,
   updateEvent,
+  findEvent,
 } from '../dataOut/events.js'
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
@@ -127,6 +128,24 @@ routerEvent.get('/:eventId',
     const id = req.params.eventId;
     const event = await getEventById(id);
     res.json(event);
+  });
+
+  routerEvent.get('/search/',
+  async (req, res) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()})
+    }
+    try {
+      const name = req.query.name
+      const active = req.query.active
+      const postdate = req.query.postdate
+      const type = req.query.type
+      const looking = await findEvent(name, active, postdate, type);
+      res.json(looking);
+    } catch (error) {
+      console.error(error)
+    }
   });
 
   
