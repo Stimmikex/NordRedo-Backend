@@ -122,29 +122,27 @@ routerEvent.get('/types',
     res.json(event);
   });
 
-routerEvent.get('/:eventId',
+routerEvent.get('/search/',
+  checkValidationResult,
+  async (req, res) => {
+    try {
+      const title = req.query.title
+      const postdate = req.query.postdate
+      const type = req.query.type
+      console.log(title +" : "+ postdate +" : "+ type)
+      const looking = await findEvent(title, postdate, type);
+      res.json(looking);
+    } catch (error) {
+      console.error(error)
+    }
+  });
+
+  routerEvent.get('/:eventId',
   paramIdRules(),
   async (req, res) => {
     const id = req.params.eventId;
     const event = await getEventById(id);
     res.json(event);
-  });
-
-  routerEvent.get('/search/',
-  async (req, res) => {
-    const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array()})
-    }
-    try {
-      const name = req.query.name
-      const postdate = req.query.postdate
-      const type = req.query.type
-      const looking = await findEvent(name, postdate, type);
-      res.json(looking);
-    } catch (error) {
-      console.error(error)
-    }
   });
 
   

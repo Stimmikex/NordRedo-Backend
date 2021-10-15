@@ -148,25 +148,35 @@ export async function getEvents() {
   return null;
 }
 
-export async function findEvent(name, postdate, type) {
-  let orderDate;
-  if (postdate === "Newest") {
-    orderDate = "ASC";
-  } else {
-    orderDate = "DESC";
-  }
-  const q = `SELECT events.id, title, text, seats, date, location, rating, signup, users.username AS user_id, event_types.name AS event_type
-              FROM events 
-            INNER JOIN users ON users.id = events.user_id 
-            INNER JOIN event_types ON event_types.id = events.event_type_id
-              WHERE title LIKE '%' || $1 || '%' AND event_types.name = $3 ORDER BY date $2
-            `;
-  try {
-    const result = await query(q, [name, orderDate, type]);
+export async function findEvent(title, postdate, type) {
+  if (postdate === "ASC") {
+    const q = `SELECT events.id, title, text, seats, date, location, rating, signup, users.username AS user_id, event_types.name AS event_type
+        FROM events 
+      INNER JOIN users ON users.id = events.user_id 
+      INNER JOIN event_types ON event_types.id = events.event_type_id
+        WHERE title LIKE '%' || $1 || '%' AND event_types.name = $2 ORDER BY date ASC;
+      `;
+    try {
+    const result = await query(q, [title, type]);
     return result.rows;
-  } catch (e) {
+    } catch (e) {
     console.error('Error occured :>> ', e);
     return null;
+    }
+  } else {
+    const q = `SELECT events.id, title, text, seats, date, location, rating, signup, users.username AS user_id, event_types.name AS event_type
+        FROM events 
+      INNER JOIN users ON users.id = events.user_id 
+      INNER JOIN event_types ON event_types.id = events.event_type_id
+        WHERE title LIKE '%' || $1 || '%' AND event_types.name = $2 ORDER BY date DESC;
+      `;
+    try {
+    const result = await query(q, [title, type]);
+    return result.rows;
+    } catch (e) {
+    console.error('Error occured :>> ', e);
+    return null;
+    }
   }
 }
 
