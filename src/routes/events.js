@@ -129,7 +129,6 @@ routerEvent.get('/search/',
       const title = req.query.title
       const postdate = req.query.postdate
       const type = req.query.type
-      console.log(title +" : "+ postdate +" : "+ type)
       const looking = await findEvent(title, postdate, type);
       res.json(looking);
     } catch (error) {
