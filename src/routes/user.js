@@ -209,13 +209,20 @@ requireAuthentication,
     }
   });
 
-routerUser.get('/:id',
-requireAdminAuthentication,
-param('id')
-  .isInt()
-  .withMessage('id must be integer'),
-async (req, res) => {
-  const data = await users.getUserByID(req.params.id);
-  if (data) return res.json( data );
-  return res.status(404).json({ msg: 'User not found' });
-});
+  routerUser.get('/stats/:userid',
+  async (req, res) => {
+    const registered = await users.countRegisteredByUserID();
+    const posted = await users.countPostedByUserID();
+    res.json(registered, posted);
+  });
+
+  routerUser.get('/:id',
+  requireAdminAuthentication,
+  param('id')
+    .isInt()
+    .withMessage('id must be integer'),
+  async (req, res) => {
+    const data = await users.getUserByID(req.params.id);
+    if (data) return res.json( data );
+    return res.status(404).json({ msg: 'User not found' });
+  });

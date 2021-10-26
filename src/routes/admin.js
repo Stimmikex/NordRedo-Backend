@@ -8,7 +8,6 @@ import { getGoverment } from '../dataOut/users.js';
 export let routerAdmin = express.Router();
 
 routerAdmin.get('/ads',
-  requireAdminAuthentication, 
   async (req, res) => {
     const ads = await getAllAds();
     res.json(ads);

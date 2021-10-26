@@ -72,7 +72,7 @@ routerEvent.patch('/update/:eventId',
     const user = req.user;
     const id = req.params.eventId;
     const data = req.body;
-    await updateEvent(data, user, id);
+    await updateEvent(data, user.id, id);
     res.json({msg: data.title + ' has been updated'});
   });
 
@@ -83,7 +83,7 @@ routerEvent.delete('/delete/:eventId',
     const id = req.params.eventId;
     const user = req.user;
     const event = await getEventById(id);
-    await deleteEvent(user, event.id);
+    await deleteEvent(user.id, event.id);
     res.json({msg: event.title + '  has been deleted'});
   });
 
