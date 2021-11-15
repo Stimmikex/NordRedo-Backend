@@ -125,7 +125,11 @@ export async function getNotesByClassID(id) {
       return null;
     }
   }
-
+/**
+ * getNotesByUserID(int id)
+ * @param {int} id 
+ * @returns <JSON> returns notes by users id
+ */
 export async function getNotesByUserID(id) {
     const q = `SELECT * FROM note WHERE user_id = $1`;
     try {
@@ -136,7 +140,11 @@ export async function getNotesByUserID(id) {
       return null;
     }
   }
-
+/**
+ * getNoteByID(int id)
+ * @param {int} id 
+ * @returns <JSON> get note by inserted id
+ */
 export async function getNoteByID(id) {
     const q = `SELECT * FROM note WHERE id = $1`;
     try {
@@ -149,8 +157,13 @@ export async function getNoteByID(id) {
   }
 
 /* Comments */
+/**
+ * getCommentByID(int id)
+ * @param {int} id 
+ * @returns gets comment by inserted id
+ */
 export async function getCommentByID(id) {
-    const q = ``;
+    const q = `SELECT * FROM comment WHERE id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -159,9 +172,13 @@ export async function getCommentByID(id) {
       return null;
     }
   }
-
+/**
+ * getCommentsByNoteID(int id)
+ * @param {int} id 
+ * @returns gets comments by note
+ */
 export async function getCommentsByNoteID(id) {
-    const q = ``;
+    const q = `SELECT * FROM comment WHERE note_id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -170,9 +187,13 @@ export async function getCommentsByNoteID(id) {
       return null;
     }
   }
-
+/**
+ * getCommentsByUserID(int id)
+ * @param {int} id 
+ * @returns gets comment by user id 
+ */
 export async function getCommentsByUserID(id) {
-    const q = ``;
+    const q = `SELECT * FROM comment WHERE user_id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -181,9 +202,13 @@ export async function getCommentsByUserID(id) {
       return null;
     }
   }
-
+/**
+ * searchCommentsByText(int id)
+ * @param {int} id 
+ * @returns gets comment by text
+ */
 export async function searchCommentsbyText(id) {
-    const q = ``;
+    const q = `SELECT * FROM comments WHERE text LIKE '%' || $1 || '%'`;
     try {
       const result = await query(q, [id]);
       return result.rows;
