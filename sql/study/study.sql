@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS note (
     description TEXT NOT NULL,
     link TEXT NOT NULL,
 	year_id INTEGER NOT NULL,
-	FOREIGN KEY (year_id) REFERENCES year (id)
+	FOREIGN KEY (year_id) REFERENCES year (id),
 	user_id INTEGER NOT NULL,
 	FOREIGN KEY (user_id) REFERENCES users (id)
 );

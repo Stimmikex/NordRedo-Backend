@@ -1,3 +1,4 @@
+import { query } from './utils.js';
 /* School */
 /**
  * getSchoolByID(int id)
@@ -31,6 +32,16 @@ export async function getSchoolByName(name) {
   }
 
 /* Classes */
+export async function getClasses() {
+    const q = `SELECT * FROM class`;
+    try {
+      const result = await query(q);
+      return result.rows;
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }
 /**
  * getClassById(int id)
  * @param {*} id 

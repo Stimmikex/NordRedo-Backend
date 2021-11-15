@@ -4,6 +4,7 @@ import { routerEvent } from './routes/events.js';
 import { routerUser } from './routes/user.js';
 import { routerStore } from './routes/store.js';
 import { routerAdmin } from './routes/admin.js';
+import { routerStudy } from './routes/study.js';
 import { getEvents } from './dataOut/events.js'
 import cookieParser from 'cookie-parser';
 import { body, validationResult } from "express-validator";
@@ -59,6 +60,7 @@ app.use('/users', routerUser);
 app.use('/event', routerEvent);
 app.use('/store', routerStore);
 app.use('/admin', routerAdmin);
+app.use('/study', routerStudy);
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
