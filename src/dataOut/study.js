@@ -31,8 +31,13 @@ export async function getSchoolByName(name) {
   }
 
 /* Classes */
-export async function getClassesByID(id) {
-    const q = ``;
+/**
+ * getClassById(int id)
+ * @param {*} id 
+ * @returns <JSON> Class by inserted id
+ */
+export async function getClassByID(id) {
+    const q = `SELECT * FROM class WHERE id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -41,9 +46,13 @@ export async function getClassesByID(id) {
       return null;
     }
   }
-
-export async function getClassessByName(name) {
-    const q = ``;
+/**
+ * getClassByName(string name)
+ * @param {*} id 
+ * @returns <JSON> Class by inserted name
+ */
+export async function getClassByName(name) {
+    const q = `SELECT * FROM class WHERE name = $1`;
     try {
       const result = await query(q, [name]);
       return result.rows;
@@ -54,8 +63,13 @@ export async function getClassessByName(name) {
   }
 
 /* Year */
+/**
+ * getYearsByClassID(int class_id)
+ * @param {*} class_id 
+ * @returns <JSON> gets years by class id
+ */
 export async function getYearsByClassID(class_id) {
-    const q = ``;
+    const q = `SELECT * FROM year WHERE class_id = $1`;
     try {
       const result = await query(q, [class_id]);
       return result.rows;
@@ -64,9 +78,13 @@ export async function getYearsByClassID(class_id) {
       return null;
     }
   }
-
+/**
+ * getYearById(int id)
+ * @param {*} id 
+ * @returns <JSON> get Year by inserted id
+ */
 export async function getYearByID(id) {
-    const q = ``;
+    const q = `SELECT * FROM year WHERE id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -77,8 +95,13 @@ export async function getYearByID(id) {
   }
 
 /* Note */
+/**
+ * getNotesByYearID(int id)
+ * @param {*} id 
+ * @returns <JSON> get notes by the year id
+ */
 export async function getNotesByYearID(id) {
-    const q = ``;
+    const q = `SELECT * FROM note WHERE year_id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -87,9 +110,13 @@ export async function getNotesByYearID(id) {
       return null;
     }
   }
-
+/**
+ * getNotesByClassID(int id)
+ * @param {*} id 
+ * @returns <JSON> get Notes by the class id
+ */
 export async function getNotesByClassID(id) {
-    const q = ``;
+    const q = `SELECT * FROM note WHERE year_id = (SELECT year.id FROM  WHERE class_id = $1)`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -100,7 +127,7 @@ export async function getNotesByClassID(id) {
   }
 
 export async function getNotesByUserID(id) {
-    const q = ``;
+    const q = `SELECT * FROM note WHERE user_id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
@@ -111,7 +138,7 @@ export async function getNotesByUserID(id) {
   }
 
 export async function getNoteByID(id) {
-    const q = ``;
+    const q = `SELECT * FROM note WHERE id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
