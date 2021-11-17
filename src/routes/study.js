@@ -11,7 +11,7 @@ export const routerStudy = express.Router();
 
 routerStudy.get('/', async (req, res) => {
     const classes = await study.getClasses();
-    res.json(classes)
+    return res.json(classes)
 });
 
 routerStudy.get('/class/search/', async (req, res) => {
@@ -24,6 +24,12 @@ routerStudy.get('/class/:classId/year/', async (req, res) => {
     const class_id = req.params.classId;
     const years = await study.getYearsByClassID(class_id);
     res.json(years)
+});
+
+routerStudy.get('/class/:classId/count/notes', async (req, res) => {
+    const class_id = req.params.classId;
+    const stats = await study.countNotesByClassID(class_id);
+    res.json(stats)
 });
 
 routerStudy.get('/class/:classId/notes/', async (req, res) => {

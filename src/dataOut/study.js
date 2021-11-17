@@ -50,12 +50,15 @@ export async function getClasses() {
 export async function getClassByID(id) {
     const q = `SELECT * FROM class WHERE id = $1`;
     try {
-      const result = await query(q, [id]);
-      return result.rows;
-    } catch (e) {
-      console.error('Error occured :>> ', e);
+        const result = await query(q, [id]);
+        if (result.rowCount === 1) {
+          return result.rows[0];
+        }
+      } catch (e) {
+        console.error('There is no event with this id');
+      }
+    
       return null;
-    }
   }
 /**
  * getClassByName(string name)
@@ -65,12 +68,15 @@ export async function getClassByID(id) {
 export async function getClassByName(name) {
     const q = `SELECT * FROM class WHERE name = $1`;
     try {
-      const result = await query(q, [name]);
-      return result.rows;
-    } catch (e) {
-      console.error('Error occured :>> ', e);
+        const result = await query(q, [name]);
+        if (result.rowCount === 1) {
+          return result.rows[0];
+        }
+      } catch (e) {
+        console.error('There is no event with this id');
+      }
+    
       return null;
-    }
   }
 
 /* Year */
@@ -98,7 +104,7 @@ export async function getYearByID(id) {
     const q = `SELECT * FROM year WHERE id = $1`;
     try {
       const result = await query(q, [id]);
-      return result.rows;
+      return result.rows[0];
     } catch (e) {
       console.error('Error occured :>> ', e);
       return null;
@@ -106,13 +112,26 @@ export async function getYearByID(id) {
   }
 
 /* Note */
+export async function countNotesByClassID(id) {
+    const q = `SELECT COUNT(*) FROM note WHERE year_id = (SELECT id FROM year WHERE class_id = $1)`;
+    try {
+      const result = await query(q, [id]);
+      return result.rows[0];
+    } catch (e) {
+      console.error('Error occured :>> ', e);
+      return null;
+    }
+  }
 /**
  * getNotesByYearID(int id)
  * @param {*} id 
  * @returns <JSON> get notes by the year id
  */
 export async function getNotesByYearID(id) {
-    const q = `SELECT * FROM note WHERE year_id = $1`;
+    const q = `SELECT note.id, note.name, description, link, users.username as author 
+                    FROM note 
+                INNER JOIN users ON users.id = note.user_id 
+                    WHERE year_id = $1`;
     try {
       const result = await query(q, [id]);
       return result.rows;
