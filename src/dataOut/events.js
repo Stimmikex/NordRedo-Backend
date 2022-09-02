@@ -240,7 +240,7 @@ export async function updateEvent(data, user_id, id) {
  * @returns NULL
  */
 export async function getCarpoolByEventId(event) {
-  const q = `SELECT carpool.seats, username, carpool.event_id FROM carpool
+  const q = `SELECT carpool.id, carpool.seats, username, carpool.event_id FROM carpool
       INNER JOIN users ON users.id = carpool.user_id 
     WHERE event_id = $1
   `;

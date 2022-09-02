@@ -141,8 +141,11 @@ routerEvent.get('/carpool/:eventId',
   paramIdRules(),
   async (req, res) => {
     const eventId = req.params.eventId;
-    const data = await getCarpoolByEventId(eventId);
-    res.json(data);
+    const getCarpool = await getCarpoolByEventId(eventId);
+    // const data = await getCarpoolByEventIdWithPooler(eventId, getCarpool.id);
+    // const seatstaken = await getSeatsTakenByCarpool(data.id);
+    // data.push(seatstaken);
+    res.json(getCarpool);
 });
 
 routerEvent.get('/:eventId',
