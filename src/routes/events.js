@@ -13,6 +13,7 @@ import {
   deleteEvent,
   updateEvent,
   findEvent,
+  getCarpoolByEventId,
 } from '../dataOut/events.js'
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
@@ -135,6 +136,14 @@ routerEvent.get('/search/',
       console.error(error)
     }
   });
+
+  routerEvent.get('/carpool/',
+  paramIdRules(),
+  async (req, res) => {
+    const id = req.params.eventId;
+    const data = await getCarpoolByEventId(id);
+    res.json(data);
+});
 
   routerEvent.get('/:eventId',
   paramIdRules(),

@@ -233,3 +233,60 @@ export async function updateEvent(data, user_id, id) {
   }
   return null;
 }
+
+/**
+ * Gets the current carpool by the event searched for.
+ * @param {*} event 
+ * @returns NULL
+ */
+export async function getCarpoolByEventId(event) {
+  const q = `SELECT * FROM carpool WHERE event_id = $1`;
+  try {
+    const result = await query(q, [event.id]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no event with this id');
+  }
+  return null;
+}
+
+/**
+ * Add or makes a carpool and connects it with user user posted and event for that carpool
+ * @param {INTEGER} seats 
+ * @param {INTEGER} user (this is the id of the user) 
+ * @param {INTEGER} event (this is the id of the event) 
+ * @returns 
+ */
+export async function addCarpoolByEventId(seats, user, event) {
+  const q = `
+    INSERT INTO
+      carpool (seats, user_id, event_id)
+    VALUES ($1, $2, $3)
+    RETURNING *
+  `;
+  try {
+    const result = await query(q, [seats, user, event]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no event with this id');
+  }
+  return null;
+}
+/**
+ * deletes the carpool by the user that posted that carpool
+ * @param {INTEGER} user (this is the id of the user) 
+ * @param {INTEGER} event (this is the id of the event)
+ * @returns 
+ */
+export async function deleteCarpoolByEventId(user, event) {
+  const q = `
+    DELETE FROM carpool WHERE user_id = $1 AND id = $2;
+  `;
+  try {
+    const result = await query(q, [user, event]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no event with this id');
+  }
+  return null;
+}

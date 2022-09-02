@@ -116,3 +116,20 @@ CREATE TABLE IF NOT EXISTS profile (
 	PRIMARY KEY(username),
 	FOREIGN KEY (username) REFERENCES Users(username)
 );
+
+CREATE TABLE IF NOT EXISTS carpool (
+    id serial primary key,
+    seats INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    Event_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (Event_id) REFERENCES events (id)
+);
+
+CREATE TABLE IF NOT EXISTS pooler (
+    id serial primary key,
+    user_id INTEGER NOT NULL,
+    carpool_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (carpool_id) REFERENCES carpool (id)
+);
