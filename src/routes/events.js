@@ -121,7 +121,7 @@ routerEvent.get('/types',
   async (req, res) => {
     const event = await getAllEventTypes();
     res.json(event);
-  });
+});
 
 routerEvent.get('/search/',
   checkValidationResult,
@@ -135,22 +135,22 @@ routerEvent.get('/search/',
     } catch (error) {
       console.error(error)
     }
-  });
+});
 
-  routerEvent.get('/carpool/',
+routerEvent.get('/carpool/:eventId',
   paramIdRules(),
   async (req, res) => {
-    const id = req.params.eventId;
-    const data = await getCarpoolByEventId(id);
+    const eventId = req.params.eventId;
+    const data = await getCarpoolByEventId(eventId);
     res.json(data);
 });
 
-  routerEvent.get('/:eventId',
+routerEvent.get('/:eventId',
   paramIdRules(),
   async (req, res) => {
     const id = req.params.eventId;
     const event = await getEventById(id);
     res.json(event);
-  });
+});
 
   
