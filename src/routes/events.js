@@ -14,6 +14,7 @@ import {
   updateEvent,
   findEvent,
   getCarpoolByEventId,
+  getSeatsTakenByCarpool,
 } from '../dataOut/events.js'
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
@@ -146,6 +147,15 @@ routerEvent.get('/carpool/:eventId',
     // const seatstaken = await getSeatsTakenByCarpool(data.id);
     // data.push(seatstaken);
     res.json(getCarpool);
+});
+
+routerEvent.get('/pooler/:eventId',
+  paramIdRules(),
+  async (req, res) => {
+    const eventId = req.params.eventId;
+    const getCarpool = await getCarpoolByEventId(eventId);
+    const seatstaken = await getSeatsTakenByCarpool(getCarpool[0].id);
+    res.json(seatstaken);
 });
 
 routerEvent.get('/:eventId',

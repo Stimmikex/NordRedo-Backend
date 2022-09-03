@@ -253,6 +253,20 @@ export async function getCarpoolByEventId(event) {
   return null;
 }
 
+export async function getSeatsTakenByCarpool(carpool) {
+  const q = `SELECT username FROM pooler 
+      INNER JOIN users ON users.id = pooler.user_id
+    WHERE carpool_id = $1
+  `;
+  try {
+    const result = await query(q, [carpool]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no event with this id');
+  }
+  return null;
+}
+
 /**
  * Add or makes a carpool and connects it with user user posted and event for that carpool
  * @param {INTEGER} seats 
