@@ -289,6 +289,22 @@ export async function addCarpoolByEventId(seats, user, event) {
   }
   return null;
 }
+
+export async function addPoolerByCarpoolId(user, carpool) {
+  const q = `
+    INSERT INTO
+      pooler (user_id, carpool_id)
+    VALUES ($1, $2)
+    RETURNING *
+  `;
+  try {
+    const result = await query(q, [user, carpool]);
+    return result.rows;
+  } catch (e) {
+    console.error('There is no Carpool with this id');
+  }
+  return null;
+}
 /**
  * deletes the carpool by the user that posted that carpool
  * @param {INTEGER} user (this is the id of the user) 

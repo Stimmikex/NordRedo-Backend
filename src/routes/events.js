@@ -15,6 +15,7 @@ import {
   findEvent,
   getCarpoolByEventId,
   getSeatsTakenByCarpool,
+  addPoolerByCarpoolId,
 } from '../dataOut/events.js'
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
@@ -138,14 +139,20 @@ routerEvent.get('/search/',
     }
 });
 
+routerEvent.post('/join/carpool/:carpoolId',
+  paramIdRules(),
+  async (req, res) => {
+    const userId = req.body.user_id;
+    const carpoolId = req.params.carpoolId;
+    const getCarpool = await addPoolerByCarpoolId(userId, carpoolId);
+    res.json({msg: req.user + ' has been added'});
+});
+
 routerEvent.get('/carpool/:eventId',
   paramIdRules(),
   async (req, res) => {
     const eventId = req.params.eventId;
     const getCarpool = await getCarpoolByEventId(eventId);
-    // const data = await getCarpoolByEventIdWithPooler(eventId, getCarpool.id);
-    // const seatstaken = await getSeatsTakenByCarpool(data.id);
-    // data.push(seatstaken);
     res.json(getCarpool);
 });
 
