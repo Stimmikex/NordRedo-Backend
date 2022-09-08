@@ -145,16 +145,19 @@ routerEvent.post('/join/carpool/:carpoolId',
   async (req, res) => {
     const userId = req.body.user_id;
     const carpoolId = req.params.carpoolId;
-    const getCarpool = await addPoolerByCarpoolId(userId, carpoolId);
+    await addPoolerByCarpoolId(userId, carpoolId);
     res.json({msg: req.user + ' has been added'});
 });
 
 routerEvent.post('/add/carpool/:eventId',
   paramIdRules(),
   async (req, res) => {
+    const seats = req.body.seats;
+    const userId = req.body.user_id;
     const eventId = req.params.eventId;
-    const getCarpool = await addCarpoolByEventId(eventId);
-    res.json({msg: getCarpool + ' has been added'});
+    console.log(eventId)
+    await addCarpoolByEventId(seats, userId, eventId);
+    res.json({msg: ' Carpool has been added to [' + eventId + ']'});
 });
 
 routerEvent.get('/carpool/:eventId',
@@ -165,12 +168,11 @@ routerEvent.get('/carpool/:eventId',
     res.json(getCarpool);
 });
 
-routerEvent.get('/pooler/:eventId',
+routerEvent.get('/pooler/:carpoolId',
   paramIdRules(),
   async (req, res) => {
-    const eventId = req.params.eventId;
-    const getCarpool = await getCarpoolByEventId(eventId);
-    const seatstaken = await getSeatsTakenByCarpool(getCarpool[0].id);
+    const carpoolId = req.params.carpoolId;
+    const seatstaken = await getSeatsTakenByCarpool(carpoolId);
     res.json(seatstaken);
 });
 
