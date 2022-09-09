@@ -254,7 +254,7 @@ export async function getCarpoolByEventId(event) {
 }
 
 export async function getSeatsTakenByCarpool(carpool) {
-  const q = `SELECT username FROM pooler 
+  const q = `SELECT user_id, username FROM pooler 
       INNER JOIN users ON users.id = pooler.user_id
     WHERE carpool_id = $1
   `;
