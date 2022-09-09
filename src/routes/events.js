@@ -17,6 +17,7 @@ import {
   getSeatsTakenByCarpool,
   addPoolerByCarpoolId,
   addCarpoolByEventId,
+  deleteCarpool,
 } from '../dataOut/events.js'
 
 import { checkValidationResult, eventRules, paramIdRules, patchEventRules } from './dataValidate/validateRoutes.js';
@@ -155,9 +156,18 @@ routerEvent.post('/add/carpool/:eventId',
     const seats = req.body.seats;
     const userId = req.body.user_id;
     const eventId = req.params.eventId;
-    console.log(eventId)
     await addCarpoolByEventId(seats, userId, eventId);
     res.json({msg: ' Carpool has been added to [' + eventId + ']'});
+});
+
+routerEvent.delete('/delete/carpool/:carpoolId',
+  requireAuthentication,
+  paramIdRules(),
+  async (req, res) => {
+    const carpoolId = req.params.carpoolId;
+    console.log(carpoolId)
+    await deleteCarpool(carpoolId);
+    res.json({msg: 'Carpool has been deleted'});
 });
 
 routerEvent.get('/carpool/:eventId',

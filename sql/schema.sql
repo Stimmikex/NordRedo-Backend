@@ -132,5 +132,5 @@ CREATE TABLE IF NOT EXISTS pooler (
     user_id INTEGER NOT NULL,
     carpool_id INTEGER NOT NULL,
     FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (carpool_id) REFERENCES carpool (id)
+    FOREIGN KEY (carpool_id) REFERENCES carpool (id) ON DELETE CASCADE ON UPDATE NO ACTION
 );

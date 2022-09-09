@@ -240,7 +240,7 @@ export async function updateEvent(data, user_id, id) {
  * @returns NULL
  */
 export async function getCarpoolByEventId(event) {
-  const q = `SELECT carpool.id, carpool.seats, username, carpool.event_id FROM carpool
+  const q = `SELECT carpool.id, carpool.seats, username, user_id, carpool.event_id FROM carpool
       INNER JOIN users ON users.id = carpool.user_id 
     WHERE event_id = $1
   `;
@@ -311,12 +311,12 @@ export async function addPoolerByCarpoolId(user, carpool) {
  * @param {INTEGER} event (this is the id of the event)
  * @returns 
  */
-export async function deleteCarpoolByEventId(user, event) {
+export async function deleteCarpool(carpool) {
   const q = `
-    DELETE FROM carpool WHERE user_id = $1 AND id = $2;
+    DELETE FROM carpool WHERE id = $1;
   `;
   try {
-    const result = await query(q, [user, event]);
+    const result = await query(q, [carpool]);
     return result.rows;
   } catch (e) {
     console.error('There is no event with this id');
